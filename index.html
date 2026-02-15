@@ -4,88 +4,66 @@
 <meta charset="UTF-8">
 <title>Hazbin Hotel Character Test</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-  body{
-    font-family: 'Roboto', sans-serif;
-    margin:0;
-    padding:0;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background: linear-gradient(120deg,#1a1a2e,#2b2b50);
-    color:white;
-    overflow:hidden;
-  }
-  .card{
-    background: rgba(43,43,61,0.95);
-    padding: 25px 20px;
-    margin: 20px auto;
-    border-radius: 20px;
-    max-width:600px;
-    box-shadow:0 0 30px rgba(0,0,0,0.6);
-    text-align:center;
-  }
-  h1{
-    margin-bottom:10px;
-  }
-  button{
-    display:block;
-    width:100%;
-    margin:10px 0;
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    background: linear-gradient(90deg,#ff4e50,#ff6f70);
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    transition:0.3s;
-  }
-  button:hover{
-    transform: scale(1.05);
-    background: linear-gradient(90deg,#ff6f70,#ff4e50);
-  }
-  .progress{
-    height:10px;
-    background:#444;
-    border-radius:10px;
-    margin-bottom:20px;
-  }
-  .bar{
-    height:10px;
-    background:#ff4e50;
-    width:0%;
-    border-radius:10px;
-  }
-  img{
-    width:150px;
-    border-radius:50%;
-    margin-top:15px;
-  }
-  .again-button{
-    margin-top:15px;
-    padding:12px 20px;
-    font-size:18px;
-    background: #ffce00;
-    color:#1e1e2f;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
-  }
-  .again-button:hover{
-    transform: scale(1.05);
-  }
-  /* Confetti styles */
-  .confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    z-index: 9999;
-    pointer-events: none;
-    opacity: 0.9;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+body{
+  font-family:'Roboto', sans-serif;
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(120deg,#1a1a2e,#2b2b50);
+  color:white;
+  overflow:hidden;
+}
+.card{
+  background: rgba(43,43,61,0.95);
+  padding: 25px 20px;
+  margin: 20px auto;
+  border-radius: 20px;
+  max-width:600px;
+  box-shadow:0 0 30px rgba(0,0,0,0.6);
+  text-align:center;
+}
+h1{margin-bottom:10px;}
+button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(90deg,#ff4e50,#ff6f70);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{transform:scale(1.05);background:linear-gradient(90deg,#ff6f70,#ff4e50);}
+.progress{height:10px;background:#444;border-radius:10px;margin-bottom:20px;}
+.bar{height:10px;background:#ff4e50;width:0%;border-radius:10px;}
+img{width:150px;border-radius:50%;margin-top:15px;}
+.again-button{
+  margin-top:15px;
+  padding:12px 20px;
+  font-size:18px;
+  background: #ffce00;
+  color:#1e1e2f;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.again-button:hover{transform:scale(1.05);}
+.confetti{
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.9;
+  border-radius:50%;
+}
 </style>
 </head>
 <body>
@@ -96,7 +74,7 @@
 </div>
 
 <script>
-const questions = [
+const questions=[
 ["What is your biggest strength? 🌸⚡🎉❤️😂💪",["🌸 Kindness","⚡ Intelligence","🎉 Confidence","❤️ Loyalty","😂 Humor","💪 Hard work"]],
 ["Pick a color 🎨",["🌸 Pink","🔴 Red","⚫ Black","⚪ White","🟣 Purple","💛 Yellow"]],
 ["How do you handle conflict? 🤔",["☮️ Peacefully","🧠 Manipulate","💥 Fight","🛡️ Protect","🙈 Avoid","😰 Stress"]],
@@ -119,7 +97,7 @@ const questions = [
 ["Your aesthetic 🎨",["🌸 Soft","😈 Vintage horror","🎉 Glam chaos","🛡️ Sharp","🍸 Messy bar","⚡ Cute deadly"]]
 ];
 
-const characters = [
+const characters=[
 {name:"Charlie",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Kind, optimistic and believes everyone deserves a second chance."},
 {name:"Alastor",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Calm, powerful and always in control with a dark sense of humor."},
 {name:"Angel Dust",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Flirty, chaotic and loves having fun no matter what."},
@@ -135,9 +113,7 @@ function showQuestion(){
   if(current>=questions.length){showResult();return;}
   let q=questions[current];
   let html=`<h2>${q[0]}</h2>`;
-  q[1].forEach((a,i)=>{
-    html+=`<button onclick="answer(${i})">${a}</button>`;
-  });
+  q[1].forEach((a,i)=>{html+=`<button onclick="answer(${i})">${a}</button>`});
   document.getElementById("quiz").innerHTML=html;
   document.getElementById("bar").style.width=(current/questions.length*100)+"%";
 }
@@ -167,22 +143,26 @@ function restart(){
   showQuestion();
 }
 
-// Big confetti effect
+// Big confetti rain effect
 function bigConfetti(){
-  for(let i=0;i<200;i++){
+  for(let i=0;i<300;i++){
     let div=document.createElement("div");
     div.className="confetti";
     div.style.background="hsl("+Math.random()*360+",100%,50%)";
     div.style.left=Math.random()*100+"%";
     div.style.top="-20px";
-    div.style.width= (5+Math.random()*8)+"px";
-    div.style.height= (5+Math.random()*8)+"px";
+    div.style.width=(5+Math.random()*8)+"px";
+    div.style.height=(5+Math.random()*8)+"px";
     document.body.appendChild(div);
+    let speed=1+Math.random()*4;
+    let angle=(Math.random()-0.5)*0.5;
     let fall=setInterval(()=>{
       let top=parseFloat(div.style.top);
+      let left=parseFloat(div.style.left);
       if(top>window.innerHeight){clearInterval(fall);div.remove();}
-      div.style.top=top+Math.random()*7+"px";
-    },20);
+      div.style.top=top+speed+"px";
+      div.style.left=left+angle+"px";
+    },20+i%3); // немного разные интервалы для "дождя"
   }
 }
 

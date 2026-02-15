@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hazbin Hotel Character Test</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#ff4e50,#1e1e2f);
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+.card{
+  background:#2b2b3d;
+  padding:20px;
+  margin:20px auto;
+  border-radius:20px;
+  max-width:600px;
+  box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#ff4e50;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{background:#ff6f70;}
+.progress{
+  height:10px;
+  background:#444;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+.bar{
+  height:10px;
+  background:#ff4e50;
+  width:0%;
+  border-radius:10px;
+}
+img{
+  width:150px;
+  border-radius:50%;
+  margin-top:15px;
+}
+</style>
+</head>
+<body>
+
+<h1>Which Hazbin Hotel Character Are You?</h1>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<div class="card" id="quiz"></div>
+
+<script>
+const questions = [
+["What is your biggest strength?",["Kindness","Intelligence","Confidence","Loyalty","Humor","Hard work"]],
+["Pick a color",["Pink","Red","Black","White","Purple","Yellow"]],
+["How do you handle conflict?",["Peacefully","Manipulate","Fight","Protect","Avoid","Stress"]],
+["Your ideal role?",["Leader","Strategist","Wild card","Protector","Observer","Helper"]],
+["What motivates you?",["Helping others","Power","Fun","Love","Money","Recognition"]],
+["Pick a hobby",["Singing","Mind games","Partying","Training","Gambling","Cleaning"]],
+["Biggest flaw?",["Too trusting","Controlling","Reckless","Overprotective","Lazy","Anxious"]],
+["Choose a weapon",["Words","Magic","Guns","Spear","Cards","Knife"]],
+["How do people see you?",["Sweet","Scary","Flirty","Serious","Tired","Energetic"]],
+["Your vibe?",["Hopeful","Calm chaos","Loud chaos","Focused","Done","Hyper"]],
+["Pick a place",["Hotel","Radio","Club","Training room","Bar","Kitchen"]],
+["Value most?",["Redemption","Control","Freedom","Trust","Peace","Order"]],
+["Your fear?",["Failing others","Losing power","Being controlled","Losing someone","Responsibility","Ignored"]],
+["Pick a quote vibe",["Everyone deserves a chance","Smile, dear","Let’s make it fun","Stay behind me","Pour me another drink","Everything must be perfect"]],
+["Energy level?",["Warm","Dangerous calm","Chaotic","Focused","Low","High"]],
+["How decide?",["Heart","Logic","Instinct","Strategy","Avoid","Overthink"]],
+["Pick a drink",["Tea","Coffee","Cocktail","Water","Whiskey","Juice"]],
+["Role in chaos?",["Stop it","Cause quietly","Enjoy","Control","Ignore","Clean after"]],
+["Loyalty?",["Very","Myself","Depends","Extremely","Not really","Work"]],
+["Your aesthetic?",["Soft","Vintage horror","Glam chaos","Sharp","Messy bar","Cute deadly"]]
+];
+
+const characters = [
+{name:"Charlie",img:"https://i.imgur.com/3ZQ3Z4D.png",desc:"Kind, optimistic and believes everyone deserves a second chance."},
+{name:"Alastor",img:"https://i.imgur.com/1X6X6X6.png",desc:"Calm, powerful and always in control with a dark sense of humor."},
+{name:"Angel Dust",img:"https://i.imgur.com/8Q8Q8Q8.png",desc:"Flirty, chaotic and loves having fun no matter what."},
+{name:"Vaggie",img:"https://i.imgur.com/5V5V5V5.png",desc:"Loyal, protective and always ready to fight for those she loves."},
+{name:"Husk",img:"https://i.imgur.com/7H7H7H7.png",desc:"Tired, sarcastic and just wants peace and a drink."},
+{name:"Niffty",img:"https://i.imgur.com/9N9N9N9.png",desc:"Energetic, obsessive and loves keeping everything clean."}
+];
+
+let current=0;
+let scores=[0,0,0,0,0,0];
+
+function showQuestion(){
+  if(current>=questions.length){showResult();return;}
+  let q=questions[current];
+  let html=`<h2>${q[0]}</h2>`;
+  q[1].forEach((a,i)=>{
+    html+=`<button onclick="answer(${i})">${a}</button>`;
+  });
+  document.getElementById("quiz").innerHTML=html;
+  document.getElementById("bar").style.width=(current/questions.length*100)+"%";
+}
+
+function answer(i){
+  scores[i]++;
+  current++;
+  showQuestion();
+}
+
+function showResult(){
+  let max=scores.indexOf(Math.max(...scores));
+  let c=characters[max];
+  document.getElementById("quiz").innerHTML=`
+  <h2>You are ${c.name}!</h2>
+  <img src="${c.img}">
+  <p>${c.desc}</p>
+  <h3>🎉 Congratulations! 🎉</h3>
+  `;
+  document.getElementById("bar").style.width="100%";
+  confetti();
+}
+
+function confetti(){
+  for(let i=0;i<100;i++){
+    let div=document.createElement("div");
+    div.style.position="fixed";
+    div.style.width="8px";
+    div.style.height="8px";
+    div.style.background="hsl("+Math.random()*360+",100%,50%)";
+    div.style.top="-10px";
+    div.style.left=Math.random()*100+"%";
+    div.style.opacity=Math.random();
+    div.style.transform="rotate("+Math.random()*360+"deg)";
+    document.body.appendChild(div);
+    let fall=setInterval(()=>{
+      div.style.top=parseInt(div.style.top)+5+"px";
+      if(parseInt(div.style.top)>window.innerHeight){clearInterval(fall);div.remove();}
+    },20);
+  }
+}
+
+showQuestion();
+</script>
+</body>
+</html>

@@ -7,19 +7,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
   body{
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(to bottom, #1e1e2f, #2b2b3d);
-    color:white;
-    text-align:center;
     margin:0;
     padding:0;
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    background-image: url('https://i.imgur.com/R8Fqj5N.png'); /* прозрачная тематическая картинка */
-    background-size: cover;
-    background-repeat:no-repeat;
-    background-position:center;
+    background: linear-gradient(120deg,#1a1a2e,#2b2b50);
+    color:white;
+    overflow:hidden;
   }
   .card{
     background: rgba(43,43,61,0.95);
@@ -27,7 +23,8 @@
     margin: 20px auto;
     border-radius: 20px;
     max-width:600px;
-    box-shadow:0 0 20px rgba(0,0,0,0.6);
+    box-shadow:0 0 30px rgba(0,0,0,0.6);
+    text-align:center;
   }
   h1{
     margin-bottom:10px;
@@ -79,6 +76,16 @@
   .again-button:hover{
     transform: scale(1.05);
   }
+  /* Confetti styles */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.9;
+  }
 </style>
 </head>
 <body>
@@ -90,35 +97,35 @@
 
 <script>
 const questions = [
-  ["What is your biggest strength? 🌸⚡🎉❤️😂💪",["🌸 Kindness","⚡ Intelligence","🎉 Confidence","❤️ Loyalty","😂 Humor","💪 Hard work"]],
-  ["Pick a color 🎨",["🌸 Pink","🔴 Red","⚫ Black","⚪ White","🟣 Purple","💛 Yellow"]],
-  ["How do you handle conflict? 🤔",["☮️ Peacefully","🧠 Manipulate","💥 Fight","🛡️ Protect","🙈 Avoid","😰 Stress"]],
-  ["Your ideal role in a group 🏆",["👑 Leader","🧩 Strategist","🎲 Wild card","🛡️ Protector","👀 Observer","🤝 Helper"]],
-  ["What motivates you most? 🔥",["🌸 Helping others","⚡ Power","🎉 Fun","❤️ Love","💰 Money","🏆 Recognition"]],
-  ["Pick a hobby 🎶",["🎤 Singing","🧠 Mind games","💃 Partying","🏋️ Training","🎲 Gambling","🧹 Cleaning"]],
-  ["Your biggest flaw ❌",["🌸 Too trusting","🧠 Controlling","💥 Reckless","🛡️ Overprotective","😴 Lazy","😰 Anxious"]],
-  ["Choose a weapon 🗡️",["🗣️ Words","✨ Magic","🔫 Guns","🗡️ Spear","🃏 Cards","🔪 Knife"]],
-  ["How do people see you? 👀",["🌸 Sweet","😈 Scary","💃 Flirty","🛡️ Serious","😴 Tired","⚡ Energetic"]],
-  ["Your vibe ✨",["🌸 Hopeful","😈 Calm chaos","🎉 Loud chaos","🛡️ Focused","😴 Done","⚡ Hyper"]],
-  ["Pick a place 📍",["🏨 Hotel","📻 Radio","💃 Club","🏋️ Training room","🍸 Bar","🍳 Kitchen"]],
-  ["What do you value most? 💎",["🌸 Redemption","⚡ Control","🎉 Freedom","❤️ Trust","😴 Peace","⚡ Order"]],
-  ["Your fear 😱",["🌸 Failing others","⚡ Losing power","😈 Being controlled","❤️ Losing someone","😴 Responsibility","⚡ Being ignored"]],
-  ["Pick a quote vibe 🗨️",["🌸 Everyone deserves a chance","😈 Smile, dear","🎉 Let’s make it fun","🛡️ Stay behind me","🍸 Pour me another drink","⚡ Everything must be perfect"]],
-  ["Energy level ⚡",["🌸 Warm","😈 Dangerous calm","🎉 Chaotic","🛡️ Focused","😴 Low","⚡ High"]],
-  ["How do you make decisions? 🤔",["❤️ Heart","🧠 Logic","⚡ Instinct","🛡️ Strategy","🙈 Avoid","😰 Overthink"]],
-  ["Pick a drink 🥤",["🍵 Tea","☕ Coffee","🍹 Cocktail","💧 Water","🥃 Whiskey","🧃 Juice"]],
-  ["Your role in chaos 🔥",["☮️ Stop it","😈 Cause quietly","🎉 Enjoy","🛡️ Control","🙈 Ignore","🧹 Clean after"]],
-  ["How loyal are you? 💖",["🌸 Very","🧠 Myself","⚡ Depends","❤️ Extremely","😴 Not really","🏆 To my work"]],
-  ["Your aesthetic 🎨",["🌸 Soft","😈 Vintage horror","🎉 Glam chaos","🛡️ Sharp","🍸 Messy bar","⚡ Cute deadly"]]
+["What is your biggest strength? 🌸⚡🎉❤️😂💪",["🌸 Kindness","⚡ Intelligence","🎉 Confidence","❤️ Loyalty","😂 Humor","💪 Hard work"]],
+["Pick a color 🎨",["🌸 Pink","🔴 Red","⚫ Black","⚪ White","🟣 Purple","💛 Yellow"]],
+["How do you handle conflict? 🤔",["☮️ Peacefully","🧠 Manipulate","💥 Fight","🛡️ Protect","🙈 Avoid","😰 Stress"]],
+["Your ideal role in a group 🏆",["👑 Leader","🧩 Strategist","🎲 Wild card","🛡️ Protector","👀 Observer","🤝 Helper"]],
+["What motivates you most? 🔥",["🌸 Helping others","⚡ Power","🎉 Fun","❤️ Love","💰 Money","🏆 Recognition"]],
+["Pick a hobby 🎶",["🎤 Singing","🧠 Mind games","💃 Partying","🏋️ Training","🎲 Gambling","🧹 Cleaning"]],
+["Your biggest flaw ❌",["🌸 Too trusting","🧠 Controlling","💥 Reckless","🛡️ Overprotective","😴 Lazy","😰 Anxious"]],
+["Choose a weapon 🗡️",["🗣️ Words","✨ Magic","🔫 Guns","🗡️ Spear","🃏 Cards","🔪 Knife"]],
+["How do people see you? 👀",["🌸 Sweet","😈 Scary","💃 Flirty","🛡️ Serious","😴 Tired","⚡ Energetic"]],
+["Your vibe ✨",["🌸 Hopeful","😈 Calm chaos","🎉 Loud chaos","🛡️ Focused","😴 Done","⚡ Hyper"]],
+["Pick a place 📍",["🏨 Hotel","📻 Radio","💃 Club","🏋️ Training room","🍸 Bar","🍳 Kitchen"]],
+["What do you value most? 💎",["🌸 Redemption","⚡ Control","🎉 Freedom","❤️ Trust","😴 Peace","⚡ Order"]],
+["Your fear 😱",["🌸 Failing others","⚡ Losing power","😈 Being controlled","❤️ Losing someone","😴 Responsibility","⚡ Being ignored"]],
+["Pick a quote vibe 🗨️",["🌸 Everyone deserves a chance","😈 Smile, dear","🎉 Let’s make it fun","🛡️ Stay behind me","🍸 Pour me another drink","⚡ Everything must be perfect"]],
+["Energy level ⚡",["🌸 Warm","😈 Dangerous calm","🎉 Chaotic","🛡️ Focused","😴 Low","⚡ High"]],
+["How do you make decisions? 🤔",["❤️ Heart","🧠 Logic","⚡ Instinct","🛡️ Strategy","🙈 Avoid","😰 Overthink"]],
+["Pick a drink 🥤",["🍵 Tea","☕ Coffee","🍹 Cocktail","💧 Water","🥃 Whiskey","🧃 Juice"]],
+["Your role in chaos 🔥",["☮️ Stop it","😈 Cause quietly","🎉 Enjoy","🛡️ Control","🙈 Ignore","🧹 Clean after"]],
+["How loyal are you? 💖",["🌸 Very","🧠 Myself","⚡ Depends","❤️ Extremely","😴 Not really","🏆 To my work"]],
+["Your aesthetic 🎨",["🌸 Soft","😈 Vintage horror","🎉 Glam chaos","🛡️ Sharp","🍸 Messy bar","⚡ Cute deadly"]]
 ];
 
 const characters = [
-  {name:"Charlie",img:"https://i.imgur.com/3ZQ3Z4D.png",desc:"Kind, optimistic and believes everyone deserves a second chance."},
-  {name:"Alastor",img:"https://i.imgur.com/1X6X6X6.png",desc:"Calm, powerful and always in control with a dark sense of humor."},
-  {name:"Angel Dust",img:"https://i.imgur.com/8Q8Q8Q8.png",desc:"Flirty, chaotic and loves having fun no matter what."},
-  {name:"Vaggie",img:"https://i.imgur.com/5V5V5V5.png",desc:"Loyal, protective and always ready to fight for those she loves."},
-  {name:"Husk",img:"https://i.imgur.com/7H7H7H7.png",desc:"Tired, sarcastic and just wants peace and a drink."},
-  {name:"Niffty",img:"https://i.imgur.com/9N9N9N9.png",desc:"Energetic, obsessive and loves keeping everything clean."}
+{name:"Charlie",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Kind, optimistic and believes everyone deserves a second chance."},
+{name:"Alastor",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Calm, powerful and always in control with a dark sense of humor."},
+{name:"Angel Dust",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Flirty, chaotic and loves having fun no matter what."},
+{name:"Vaggie",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Loyal, protective and always ready to fight for those she loves."},
+{name:"Husk",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Tired, sarcastic and just wants peace and a drink."},
+{name:"Niffty",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Energetic, obsessive and loves keeping everything clean."}
 ];
 
 let current=0;
@@ -151,7 +158,7 @@ function showResult(){
   <button class="again-button" onclick="restart()">Take the test again</button>
   `;
   document.getElementById("bar").style.width="100%";
-  confetti();
+  bigConfetti();
 }
 
 function restart(){
@@ -160,21 +167,21 @@ function restart(){
   showQuestion();
 }
 
-function confetti(){
-  for(let i=0;i<100;i++){
+// Big confetti effect
+function bigConfetti(){
+  for(let i=0;i<200;i++){
     let div=document.createElement("div");
-    div.style.position="fixed";
-    div.style.width="8px";
-    div.style.height="8px";
+    div.className="confetti";
     div.style.background="hsl("+Math.random()*360+",100%,50%)";
-    div.style.top="-10px";
     div.style.left=Math.random()*100+"%";
-    div.style.opacity=Math.random();
-    div.style.transform="rotate("+Math.random()*360+"deg)";
+    div.style.top="-20px";
+    div.style.width= (5+Math.random()*8)+"px";
+    div.style.height= (5+Math.random()*8)+"px";
     document.body.appendChild(div);
     let fall=setInterval(()=>{
-      div.style.top=parseInt(div.style.top)+5+"px";
-      if(parseInt(div.style.top)>window.innerHeight){clearInterval(fall);div.remove();}
+      let top=parseFloat(div.style.top);
+      if(top>window.innerHeight){clearInterval(fall);div.remove();}
+      div.style.top=top+Math.random()*7+"px";
     },20);
   }
 }

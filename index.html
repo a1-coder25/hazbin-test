@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Mag Battle Quiz</title>
+<title>Magic Battle Quiz</title>
 <style>
   body {
     margin:0;
@@ -114,7 +114,7 @@
 <body>
 
 <div id="quiz-container">
-  <h1 id="quiz-title">Who Are You in Mag Battle? ⚡</h1>
+  <h1 id="quiz-title">Who Are You in Magic Battle? ⚡</h1>
   <div id="question-number">Question 1/20</div>
   <div id="question">Loading...</div>
   <div id="answers"></div>
@@ -126,18 +126,18 @@
   <h2 id="result-name"></h2>
   <img id="result-img" src="" alt="Character">
   <p id="result-desc"></p>
-  <button id="restart-btn">Пройти снова 🔄</button>
+  <button id="restart-btn">Take the quiz again 🔄</button>
 </div>
 
 <script>
 const characters = {
-  gojo: {name:"Gojo 😎", img:"gojo.png", desc:"Gojo — сильный и непредсказуемый маг. Ты любишь быть лидером, идти против правил и всегда уверенно чувствуешь себя даже в самых опасных ситуациях. Люди тянутся к твоей харизме."},
-  yuji: {name:"Yuji 💪", img:"yuji.png", desc:"Yuji — добрый и смелый боец. Ты всегда защищаешь друзей, даже если сам рискуешь. У тебя большое сердце и огромная внутренняя сила."},
-  megumi: {name:"Megumi 🐺", img:"megumi.png", desc:"Megumi — стратег и тактик. Ты спокойный, умный и предпочитаешь думать перед действием. Люди считают тебя надёжным и рассудительным."},
-  nobara: {name:"Nobara 🔨", img:"nobara.png", desc:"Nobara — уверенная и стильная. Ты не боишься быть собой, всегда говоришь прямо и идёшь к цели без сомнений. В тебе сочетаются сила и харизма."},
-  sukuna: {name:"Sukuna 😈", img:"sukuna.png", desc:"Sukuna — тёмная и мощная энергия. Ты любишь доминировать, не боишься силы и идёшь своим путём. В тебе есть опасная уверенность и независимость."},
-  yuta: {name:"Yuta 🖤", img:"yuta.png", desc:"Yuta — тихая, но огромная сила. Ты можешь казаться спокойным, но внутри скрывается мощная энергия. Ты заботишься о близких и умеешь удивлять."},
-  toji: {name:"Toji 🗡️", img:"toji.png", desc:"Toji — быстрый и смертельно точный. Ты действуешь решительно, не любишь лишние слова и всегда добиваешься результата. Твоя сила в скорости и хладнокровии."}
+  gojo: {name:"Gojo 😎", img:"gojo.png", desc:"Gojo is an incredibly powerful and unpredictable sorcerer. You love being the center of attention and always stay confident even in dangerous situations. Your charisma makes people naturally follow you."},
+  yuji: {name:"Yuji 💪", img:"yuji.png", desc:"Yuji is kind-hearted and brave. You always protect your friends no matter the cost and have a strong moral compass. Your inner strength is much bigger than people expect."},
+  megumi: {name:"Megumi 🐺", img:"megumi.png", desc:"Megumi is calm, smart, and strategic. You prefer thinking before acting and always analyze the situation carefully. People see you as reliable and composed."},
+  nobara: {name:"Nobara 🔨", img:"nobara.png", desc:"Nobara is confident, stylish, and fearless. You know your worth and never let anyone underestimate you. You combine strength with bold personality."},
+  sukuna: {name:"Sukuna 😈", img:"sukuna.png", desc:"Sukuna represents raw power and dominance. You are independent, fearless, and not afraid to walk your own path. Your presence is intense and impossible to ignore."},
+  yuta: {name:"Yuta 🖤", img:"yuta.png", desc:"Yuta seems quiet but hides immense power inside. You care deeply about the people close to you and can become incredibly strong when it matters most. You are mysterious and emotional."},
+  toji: {name:"Toji 🗡️", img:"toji.png", desc:"Toji is fast, deadly, and efficient. You act without hesitation and always aim for results. Your strength lies in precision, speed, and a cool head under pressure."}
 };
 
 const questions = [

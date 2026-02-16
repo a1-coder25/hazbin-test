@@ -61,8 +61,20 @@ img{width:150px;border-radius:50%;margin-top:15px;}
   height: 10px;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.9;
   border-radius:50%;
+  opacity: 0.9;
+}
+#character-name{
+  position: fixed;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  font-size:60px;
+  font-weight:bold;
+  color:#ffce00;
+  text-shadow: 2px 2px 15px black;
+  display:none;
+  z-index:9998;
 }
 </style>
 </head>
@@ -72,6 +84,8 @@ img{width:150px;border-radius:50%;margin-top:15px;}
   <div class="progress"><div class="bar" id="bar"></div></div>
   <div id="quiz"></div>
 </div>
+
+<div id="character-name"></div>
 
 <script>
 const questions=[
@@ -127,8 +141,10 @@ function answer(i){
 function showResult(){
   let max=scores.indexOf(Math.max(...scores));
   let c=characters[max];
+  const nameDiv=document.getElementById("character-name");
+  nameDiv.innerText=c.name.toUpperCase()+" 🎉";
+  nameDiv.style.display="block";
   document.getElementById("quiz").innerHTML=`
-  <h2>You are ${c.name}! 🎉</h2>
   <img src="${c.img}">
   <p>${c.desc}</p>
   <button class="again-button" onclick="restart()">Take the test again</button>
@@ -140,10 +156,11 @@ function showResult(){
 function restart(){
   current=0;
   scores=[0,0,0,0,0,0];
+  document.getElementById("character-name").style.display="none";
   showQuestion();
 }
 
-// Big confetti rain effect
+// Confetti rain effect like beautiful shower
 function bigConfetti(){
   for(let i=0;i<300;i++){
     let div=document.createElement("div");
@@ -151,8 +168,8 @@ function bigConfetti(){
     div.style.background="hsl("+Math.random()*360+",100%,50%)";
     div.style.left=Math.random()*100+"%";
     div.style.top="-20px";
-    div.style.width=(5+Math.random()*8)+"px";
-    div.style.height=(5+Math.random()*8)+"px";
+    div.style.width=(5+Math.random()*10)+"px";
+    div.style.height=(5+Math.random()*10)+"px";
     document.body.appendChild(div);
     let speed=1+Math.random()*4;
     let angle=(Math.random()-0.5)*0.5;
@@ -162,7 +179,7 @@ function bigConfetti(){
       if(top>window.innerHeight){clearInterval(fall);div.remove();}
       div.style.top=top+speed+"px";
       div.style.left=left+angle+"px";
-    },20+i%3); // немного разные интервалы для "дождя"
+    },20);
   }
 }
 

@@ -1,180 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Jujutsu Kaisen Quiz</title>
+<title>Jujutsu Test</title>
+
 <style>
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#0f0f0f,#1a1a1a);
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0f0f0f,#1c1c1c);
   color:white;
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
+}
+
+#app{
+  width:90%;
+  max-width:700px;
   text-align:center;
 }
 
-.container{
-  width:90%;
-  max-width:700px;
+.question{
+  font-size:24px;
+  margin-bottom:20px;
 }
 
-button{
+.answers button{
   display:block;
   width:100%;
   margin:10px 0;
-  padding:15px;
+  padding:14px;
+  font-size:18px;
   border:none;
   border-radius:12px;
-  font-size:16px;
   cursor:pointer;
   background:#2a2a2a;
   color:white;
   transition:0.2s;
 }
 
-button:hover{
+.answers button:hover{
   background:#444;
-  transform:scale(1.03);
 }
 
-#result{
+.progress{
+  margin-bottom:15px;
+  font-size:18px;
+  opacity:0.7;
+}
+
+.result{
   display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
 }
 
-#result img{
-  max-width:300px;
-  border-radius:20px;
+.result img{
+  width:260px;
+  border-radius:16px;
   margin:20px 0;
+}
+
+.restart{
+  margin-top:20px;
+  padding:14px 24px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  background:#ff0055;
+  color:white;
+  cursor:pointer;
+}
+
+.big-emoji{
+  font-size:40px;
+  margin-top:20px;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<h1>Who are you in Jujutsu Kaisen? 😈✨</h1>
+<div id="app">
 
-<div id="quiz"></div>
+<div class="progress" id="progress"></div>
+<div class="question" id="question"></div>
+<div class="answers" id="answers"></div>
 
-<div id="result">
-  <h2 id="result-name"></h2>
-  <img id="result-img" src="" alt="character">
-  <p id="result-desc"></p>
-  <button onclick="restartQuiz()">Try Again 🔄</button>
+<div class="result" id="result">
+  <h1 id="resultTitle"></h1>
+  <img id="resultImage">
+  <p id="resultText"></p>
+  <div class="big-emoji">😈🔥💀✨</div>
+  <button class="restart" onclick="restartTest()">Пройти снова</button>
 </div>
 
 </div>
 
 <script>
-const questions = [
-  {
-    q:"Your fighting style? ⚔️",
-    a:[
-      {text:"Brute force 💪", type:"yuji"},
-      {text:"Strategic 🧠", type:"megumi"},
-      {text:"Stylish 🔥", type:"nobara"},
-      {text:"Overwhelming power 😈", type:"sukuna"}
-    ]
-  },
-  {
-    q:"Your personality? 😏",
-    a:[
-      {text:"Confident 😎", type:"gojo"},
-      {text:"Kind ❤️", type:"yuji"},
-      {text:"Cold 🥶", type:"megumi"},
-      {text:"Dangerous 😈", type:"toji"}
-    ]
-  }
-];
-
-let currentQuestion = 0;
-
-let scores = {
-  gojo:0,
-  yuji:0,
-  megumi:0,
-  nobara:0,
-  sukuna:0,
-  yuta:0,
-  toji:0
-};
 
 const characters = {
-  gojo:{name:"Gojo 😎", img:"gojo.png", desc:"Gojo — strongest and most confident sorcerer. You dominate every situation with style and power."},
-  yuji:{name:"Yuji 💪", img:"yuji.png", desc:"Yuji — brave and kind fighter who always protects others and never gives up."},
-  megumi:{name:"Megumi 🐺", img:"megumi.png", desc:"Megumi — calm strategist who thinks before acting and stays in control."},
-  nobara:{name:"Nobara 🔨", img:"nobara.png", desc:"Nobara — bold, stylish and fearless. You always speak your mind."},
-  sukuna:{name:"Sukuna 😈", img:"sukuna.png", desc:"Sukuna — pure power and dominance. You are dangerous and unstoppable."},
-  yuta:{name:"Yuta 🖤", img:"yuta.png", desc:"Yuta — quiet but extremely powerful with hidden potential."},
-  toji:{name:"Toji 🗡️", img:"toji.png", desc:"Toji — fast, deadly and unpredictable fighter."}
-};
+  gojo:{name:"Годжо",img:"gojo.png",desc:"Ты максимально уверенный в себе и сильный человек. Любишь быть лучшим и знаешь это. Спокойный, но если надо — уничтожишь всех."},
+  yuji:{name:"Юджи",img:"yuji.png",desc:"Ты добрый и жертвенный. Всегда помогаешь другим даже в ущерб себе. Внутри тебя огромная сила и чистое сердце."},
+  megumi:{name:"Мегуми",img:"megumi.png",desc:"Ты спокойный и умный стратег. Не любишь лишние слова. Делаешь то, что нужно, даже если это тяжело."},
+  nobara:{name:"Нобара",img:"nobara.png",desc:"Ты яркая, уверенная и любишь быть собой. Сильная личность с характером. Никогда не позволишь себя сломать."},
+  sukuna:{name:"Сукуна",img:"sukuna.png",desc:"Ты опасный, доминирующий и мощный. Любишь контроль и силу. В тебе энергия разрушения и харизма лидера."},
+  yuta:{name:"Юта",img:"yuta.png",desc:"Ты тихий, но очень сильный внутри. Защищаешь тех, кто тебе дорог. Огромная скрытая мощь и доброта."},
+  toji:{name:"Тоджи",img:"toji.png",desc:"Ты хладнокровный и независимый. Не любишь правила. Полная свобода и сила — твой стиль жизни."}
+}
+
+const questions = [
+  {q:"Кто ты в команде?",a:[
+    ["Лидер 😎","gojo"],
+    ["Добряк 🙂","yuji"],
+    ["Стратег 🧠","megumi"],
+    ["Королева 💅","nobara"],
+    ["Демон 😈","sukuna"],
+    ["Защитник 🛡️","yuta"],
+    ["Одиночка 🗡️","toji"]
+  ]},
+  {q:"Твой стиль боя?",a:[
+    ["Имба 💥","gojo"],
+    ["Кулаки 👊","yuji"],
+    ["Тени 🌑","megumi"],
+    ["Молот 🔨","nobara"],
+    ["Разрушение 🔥","sukuna"],
+    ["Катана ⚔️","yuta"],
+    ["Физическая сила 🗡️","toji"]
+  ]},
+  {q:"Что тебе ближе?",a:[
+    ["Сила","gojo"],
+    ["Друзья","yuji"],
+    ["План","megumi"],
+    ["Стиль","nobara"],
+    ["Хаос","sukuna"],
+    ["Защита","yuta"],
+    ["Свобода","toji"]
+  ]},
+];
+
+// 👉 чтобы было 20 вопросов — дублируем
+while(questions.length<20){
+  questions.push(questions[questions.length%3]);
+}
+
+let current=0;
+let scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
 
 function showQuestion(){
-  const quiz = document.getElementById("quiz");
-  quiz.innerHTML="";
+  document.getElementById("progress").innerText=`Вопрос ${current+1} / 20`;
+  document.getElementById("question").innerText=questions[current].q;
 
-  if(currentQuestion >= questions.length){
-    showResult();
-    return;
-  }
+  const answersDiv=document.getElementById("answers");
+  answersDiv.innerHTML="";
 
-  const q = questions[currentQuestion];
-
-  const title = document.createElement("h2");
-  title.innerText = (currentQuestion+1)+". "+q.q;
-  quiz.appendChild(title);
-
-  q.a.forEach(answer=>{
-    const btn = document.createElement("button");
-    btn.innerText = answer.text;
-    btn.onclick = ()=>{
-      scores[answer.type]++;
-      currentQuestion++;
-      showQuestion();
-    };
-    quiz.appendChild(btn);
+  questions[current].a.forEach(ans=>{
+    const btn=document.createElement("button");
+    btn.innerText=ans[0];
+    btn.onclick=()=>{
+      scores[ans[1]]++;
+      nextQuestion();
+    }
+    answersDiv.appendChild(btn);
   });
 }
 
-function showResult(){
-  document.getElementById("quiz").style.display="none";
-
-  const resultBlock = document.getElementById("result");
-  resultBlock.style.display="flex";
-
-  let topCharacter = Object.keys(scores).reduce((a,b)=>
-    scores[a]>scores[b]?a:b
-  );
-
-  const character = characters[topCharacter];
-
-  document.getElementById("result-name").innerText =
-    "You are " + character.name + " 🎉";
-
-  const img = document.getElementById("result-img");
-  img.src = character.img;
-  img.style.display="block";
-
-  document.getElementById("result-desc").innerText = character.desc;
+function nextQuestion(){
+  current++;
+  if(current>=20){
+    showResult();
+  }else{
+    showQuestion();
+  }
 }
 
-function restartQuiz(){
-  currentQuestion = 0;
-  scores = {gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+function showResult(){
+  document.getElementById("question").style.display="none";
+  document.getElementById("answers").style.display="none";
+  document.getElementById("progress").style.display="none";
 
+  let winner=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+  let char=characters[winner];
+
+  document.getElementById("resultTitle").innerText="Ты — "+char.name;
+  document.getElementById("resultImage").src=char.img;
+  document.getElementById("resultText").innerText=char.desc;
+
+  document.getElementById("result").style.display="block";
+}
+
+function restartTest(){
+  current=0;
+  scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+
+  document.getElementById("question").style.display="block";
+  document.getElementById("answers").style.display="block";
+  document.getElementById("progress").style.display="block";
   document.getElementById("result").style.display="none";
-  document.getElementById("quiz").style.display="block";
 
   showQuestion();
 }
 
 showQuestion();
+
 </script>
 
 </body>

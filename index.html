@@ -2,237 +2,176 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Mag Battle Quiz</title>
+<title>Jujutsu Kaisen Quiz</title>
 <style>
-  body {
-    margin:0;
-    padding:0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #1f1c2c, #928dab);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    justify-content: space-between;
-  }
-  #quiz-container {
-    flex:1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
-  }
-  #quiz-title {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-  }
-  #question-number {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-  #question {
-    font-size: 1.5em;
-    margin: 20px 0;
-    text-align: center;
-  }
-  #answers {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    max-width: 500px;
-  }
-  .answer {
-    background: #3a3a5c;
-    border: none;
-    color: #fff;
-    padding: 12px 20px;
-    margin: 8px 0;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: all 0.2s ease;
-  }
-  .answer:hover {
-    background: #5c5ca1;
-    transform: scale(1.05);
-  }
-  #emoji-footer {
-    font-size: 2.5em;
-    text-align: center;
-    padding: 15px;
-    background: rgba(0,0,0,0.2);
-  }
-  #result {
-    position: fixed;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.8);
-    padding: 25px;
-    border-radius: 20px;
-    text-align: center;
-    display:none;
-    width: 90%;
-    max-width: 600px;
-  }
-  #result img {
-    width:200px;
-    height:200px;
-    border-radius: 50%;
-    margin: 15px 0;
-  }
-  #restart-btn {
-    margin-top: 15px;
-    padding: 12px 25px;
-    border-radius: 12px;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-    background: #5c5ca1;
-    color: #fff;
-  }
-  /* Салюты */
-  .firework {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: gold;
-    border-radius: 50%;
-    pointer-events: none;
-    animation-name: fall;
-    animation-timing-function: linear;
-  }
-  @keyframes fall {
-    0% { transform: translateY(0) rotate(0deg); opacity:1; }
-    100% { transform: translateY(800px) rotate(360deg); opacity:0; }
-  }
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(180deg,#0f0f0f,#1a1a1a);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  text-align:center;
+}
+
+.container{
+  width:90%;
+  max-width:700px;
+}
+
+button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  cursor:pointer;
+  background:#2a2a2a;
+  color:white;
+  transition:0.2s;
+}
+
+button:hover{
+  background:#444;
+  transform:scale(1.03);
+}
+
+#result{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+#result img{
+  max-width:300px;
+  border-radius:20px;
+  margin:20px 0;
+}
 </style>
 </head>
+
 <body>
+<div class="container">
 
-<div id="quiz-container">
-  <h1 id="quiz-title">Who Are You in Mag Battle? ⚡</h1>
-  <div id="question-number">Question 1/20</div>
-  <div id="question">Loading...</div>
-  <div id="answers"></div>
-</div>
+<h1>Who are you in Jujutsu Kaisen? 😈✨</h1>
 
-<div id="emoji-footer">😈 😇 😎 👹 🐉 🔥 💀</div>
+<div id="quiz"></div>
 
 <div id="result">
   <h2 id="result-name"></h2>
-  <img id="result-img" src="" alt="Character">
+  <img id="result-img" src="" alt="character">
   <p id="result-desc"></p>
-  <button id="restart-btn">Пройти снова 🔄</button>
+  <button onclick="restartQuiz()">Try Again 🔄</button>
+</div>
+
 </div>
 
 <script>
-const characters = {
-  gojo: {name:"Gojo 😎", img:"images/gojo.png", desc:"Gojo — сильный и непредсказуемый маг, любит рисковать и быть лидером."},
-  yuji: {name:"Yuji 💪", img:"images/yuji.png", desc:"Yuji — смелый и решительный, всегда готов защищать друзей и бороться со злом."},
-  megumi: {name:"Megumi 🐺", img:"images/megumi.png", desc:"Megumi — сдержанный и умный, отлично планирует свои действия и действует тактически."},
-  nobara: {name:"Nobara 🔨", img:"images/nobara.png", desc:"Nobara — стильная и решительная, всегда добивается цели с уверенностью и смелостью."},
-  sukuna: {name:"Sukuna 😈", img:"images/sukuna.png", desc:"Sukuna — опасный и сильный демон, тебе он больше всего подходит, если любишь силу и дерзость."},
-  yuta: {name:"Yuta 🖤", img:"images/yuta.png", desc:"Yuta — таинственный и загадочный, умеет удивлять и держать ситуацию под контролем."},
-  toji: {name:"Toji 🗡️", img:"images/toji.png", desc:"Toji — быстрый и смертоносный, предпочитает решительные действия и неожиданные атаки."}
-};
-
 const questions = [
-  {q:"Your energy today?", a:["High and unstoppable 😈","Calm and steady 😇","Focused and clever 😎","Impulsive and wild 👹","Dark and mysterious 🖤","Cheerful and strong 💪","Fast and fierce 🗡️"]},
-  {q:"How do you face danger?", a:["Head-on attack 😈","Plan carefully 😇","Outsmart opponent 😎","Use charm 👹","Scare others 🖤","Protect friends 💪","Surprise strike 🗡️"]},
-  {q:"Your favorite place?", a:["Open battlefield 😈","Quiet library 😇","Training grounds 😎","Night city 👹","Forbidden zone 🖤","School 🏫 💪","Rooftops 🗡️"]},
-  {q:"Preferred weapon?", a:["Magic 😈","Strategy 😇","Cursed technique 😎","Anything flashy 👹","Unknown power 🖤","Physical strength 💪","Blades 🗡️"]},
-  {q:"Your personality?", a:["Reckless 😈","Thoughtful 😇","Cool 😎","Playful 👹","Intense 🖤","Friendly 💪","Deadly 🗡️"]},
-  {q:"Your best skill?", a:["Power 😈","Wisdom 😇","Speed 😎","Trickery 👹","Dark arts 🖤","Strength 💪","Assassin skills 🗡️"]},
-  {q:"Your favorite food?", a:["Spicy 🔥 😈","Healthy 😇","Balanced 😎","Street food 👹","Mysterious 🖤","Energy snacks 💪","Quick bites 🗡️"]},
-  {q:"How do friends see you?", a:["Crazy 😈","Reliable 😇","Leader 😎","Fun 👹","Scary 🖤","Loyal 💪","Silent killer 🗡️"]},
-  {q:"Your favorite color?", a:["Red 😈","Blue 😇","White 😎","Pink 👹","Black 🖤","Orange 💪","Dark gray 🗡️"]},
-  {q:"You prefer?", a:["Fight 😈","Think 😇","Train 😎","Play 👹","Chaos 🖤","Teamwork 💪","Stealth 🗡️"]},
-  {q:"Your lucky item?", a:["Cursed talisman 😈","Notebook 😇","Sunglasses 😎","Mask 👹","Dark ring 🖤","Gloves 💪","Dagger 🗡️"]},
-  {q:"Your reaction to insult?", a:["Attack 😈","Ignore 😇","Smile 😎","Joke 👹","Threaten 🖤","Laugh 💪","Disappear 🗡️"]},
-  {q:"Your dream?", a:["Dominate 😈","Knowledge 😇","Master technique 😎","Fun 👹","Chaos 🖤","Save friends 💪","Freedom 🗡️"]},
-  {q:"Preferred companion?", a:["Strong ally 😈","Wise friend 😇","Cool partner 😎","Funny buddy 👹","Dark minion 🖤","Reliable comrade 💪","Silent partner 🗡️"]},
-  {q:"Favorite time of day?", a:["Night 😈","Morning 😇","Afternoon 😎","Evening 👹","Midnight 🖤","Day 💪","Twilight 🗡️"]},
-  {q:"How do you relax?", a:["Training 😈","Meditation 😇","Gaming 😎","Pranks 👹","Alone 🖤","Exercise 💪","Hunting 🗡️"]},
-  {q:"Your strategy?", a:["Attack first 😈","Plan 😇","React 😎","Trick 👹","Intimidate 🖤","Support 💪","Ambush 🗡️"]},
-  {q:"Your style?", a:["Bold 😈","Calm 😇","Cool 😎","Playful 👹","Sinister 🖤","Strong 💪","Deadly 🗡️"]},
-  {q:"Your mood?", a:["Energetic 😈","Peaceful 😇","Confident 😎","Mischievous 👹","Dark 🖤","Happy 💪","Focused 🗡️"]},
-  {q:"Your approach to challenge?", a:["Head-on 😈","Smart 😇","Quick 😎","Funny 👹","Intense 🖤","Team 💪","Silent 🗡️"]}
+  {
+    q:"Your fighting style? ⚔️",
+    a:[
+      {text:"Brute force 💪", type:"yuji"},
+      {text:"Strategic 🧠", type:"megumi"},
+      {text:"Stylish 🔥", type:"nobara"},
+      {text:"Overwhelming power 😈", type:"sukuna"}
+    ]
+  },
+  {
+    q:"Your personality? 😏",
+    a:[
+      {text:"Confident 😎", type:"gojo"},
+      {text:"Kind ❤️", type:"yuji"},
+      {text:"Cold 🥶", type:"megumi"},
+      {text:"Dangerous 😈", type:"toji"}
+    ]
+  }
 ];
 
-let scores = {gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
-let current = 0;
+let currentQuestion = 0;
 
-const questionEl = document.getElementById('question');
-const answersEl = document.getElementById('answers');
-const questionNumberEl = document.getElementById('question-number');
-const resultEl = document.getElementById('result');
-const resultName = document.getElementById('result-name');
-const resultImg = document.getElementById('result-img');
-const resultDesc = document.getElementById('result-desc');
-const restartBtn = document.getElementById('restart-btn');
+let scores = {
+  gojo:0,
+  yuji:0,
+  megumi:0,
+  nobara:0,
+  sukuna:0,
+  yuta:0,
+  toji:0
+};
+
+const characters = {
+  gojo:{name:"Gojo 😎", img:"gojo.png", desc:"Gojo — strongest and most confident sorcerer. You dominate every situation with style and power."},
+  yuji:{name:"Yuji 💪", img:"yuji.png", desc:"Yuji — brave and kind fighter who always protects others and never gives up."},
+  megumi:{name:"Megumi 🐺", img:"megumi.png", desc:"Megumi — calm strategist who thinks before acting and stays in control."},
+  nobara:{name:"Nobara 🔨", img:"nobara.png", desc:"Nobara — bold, stylish and fearless. You always speak your mind."},
+  sukuna:{name:"Sukuna 😈", img:"sukuna.png", desc:"Sukuna — pure power and dominance. You are dangerous and unstoppable."},
+  yuta:{name:"Yuta 🖤", img:"yuta.png", desc:"Yuta — quiet but extremely powerful with hidden potential."},
+  toji:{name:"Toji 🗡️", img:"toji.png", desc:"Toji — fast, deadly and unpredictable fighter."}
+};
 
 function showQuestion(){
-  if(current>=questions.length){
+  const quiz = document.getElementById("quiz");
+  quiz.innerHTML="";
+
+  if(currentQuestion >= questions.length){
     showResult();
     return;
   }
-  questionEl.textContent = questions[current].q;
-  questionNumberEl.textContent = `Question ${current+1}/20`;
-  answersEl.innerHTML='';
-  questions[current].a.forEach((ans,i)=>{
-    const btn = document.createElement('button');
-    btn.className='answer';
-    btn.textContent = ans;
+
+  const q = questions[currentQuestion];
+
+  const title = document.createElement("h2");
+  title.innerText = (currentQuestion+1)+". "+q.q;
+  quiz.appendChild(title);
+
+  q.a.forEach(answer=>{
+    const btn = document.createElement("button");
+    btn.innerText = answer.text;
     btn.onclick = ()=>{
-      const charKeys = Object.keys(characters);
-      scores[charKeys[i]] +=1;
-      current++;
+      scores[answer.type]++;
+      currentQuestion++;
       showQuestion();
     };
-    answersEl.appendChild(btn);
+    quiz.appendChild(btn);
   });
 }
 
 function showResult(){
-  questionEl.style.display='none';
-  answersEl.style.display='none';
-  questionNumberEl.style.display='none';
-  resultEl.style.display='block';
-  let maxScore=-1;
-  let winner='';
-  for(let c in scores){
-    if(scores[c]>maxScore){
-      maxScore=scores[c];
-      winner=c;
-    }
-  }
-  resultName.textContent=characters[winner].name;
-  resultImg.src=characters[winner].img;
-  resultDesc.textContent=characters[winner].desc;
-  launchFireworks();
+  document.getElementById("quiz").style.display="none";
+
+  const resultBlock = document.getElementById("result");
+  resultBlock.style.display="flex";
+
+  let topCharacter = Object.keys(scores).reduce((a,b)=>
+    scores[a]>scores[b]?a:b
+  );
+
+  const character = characters[topCharacter];
+
+  document.getElementById("result-name").innerText =
+    "You are " + character.name + " 🎉";
+
+  const img = document.getElementById("result-img");
+  img.src = character.img;
+  img.style.display="block";
+
+  document.getElementById("result-desc").innerText = character.desc;
 }
 
-restartBtn.onclick = ()=>{
+function restartQuiz(){
+  currentQuestion = 0;
   scores = {gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
-  current=0;
-  resultEl.style.display='none';
-  questionEl.style.display='block';
-  answersEl.style.display='flex';
-  questionNumberEl.style.display='block';
-  showQuestion();
-}
 
-function launchFireworks(){
-  for(let i=0;i<50;i++){
-    const f = document.createElement('div');
-    f.className='firework';
-    f.style.left=Math.random()*window.innerWidth+'px';
-    f.style.animationDuration=(2+Math.random()*2)+'s';
-    document.body.appendChild(f);
-    setTimeout(()=>{f.remove();},4000);
-  }
+  document.getElementById("result").style.display="none";
+  document.getElementById("quiz").style.display="block";
+
+  showQuestion();
 }
 
 showQuestion();

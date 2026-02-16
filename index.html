@@ -7,23 +7,51 @@
 <style>
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(to bottom, #1f1c2c, #928dab);
   color: white;
   text-align: center;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 h1 {
-  font-size: 3em;
+  font-size: 2.5em;
   margin-top: 20px;
   margin-bottom: 40px;
 }
-#question { font-size: 1.5em; margin-bottom: 20px; }
-.answers { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; }
-.answer { background: rgba(255,255,255,0.1); padding: 15px 20px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-.answer:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
-#result { display: none; margin-top: 30px; }
-#result img { width: 200px; height: 200px; border-radius: 50%; margin-top: 20px; }
+#question {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+.answers {
+  display: block;
+  margin-bottom: 30px;
+}
+.answer {
+  display: block;
+  background: rgba(255,255,255,0.1);
+  padding: 15px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 10px auto;
+  width: 60%;
+  text-align: center;
+}
+.answer:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
+}
+#result {
+  display: none;
+  margin-top: 30px;
+}
+#result img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin-top: 20px;
+}
 .firework {
   position: absolute;
   width: 10px;
@@ -50,7 +78,18 @@ h1 {
 </div>
 
 <script>
-// 20 вопросов, 7 персонажей
+// Персонажи и картинки из папки images
+const characters={
+  gojo:{name:"Gojo 😎", img:"images/gojo.png"},
+  yuji:{name:"Yuji 💪", img:"images/yuji.png"},
+  megumi:{name:"Megumi 🐺", img:"images/megumi.png"},
+  nobara:{name:"Nobara 🔨", img:"images/nobara.png"},
+  sukuna:{name:"Sukuna 😈", img:"images/sukuna.png"},
+  yuta:{name:"Yuta 🖤", img:"images/yuta.png"},
+  toji:{name:"Toji 🗡️", img:"images/toji.png"}
+};
+
+// 20 вопросов, каждый с 7 вариантами ответа
 const questions=[
 {q:"Your energy today? ✨",a:[
 {text:"I shine without trying 😎",type:"gojo"},
@@ -241,8 +280,8 @@ function showQuestion(){
 
 function showResult(){
   const winner=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-  resultName.innerText=`You are ${questions[0].a.find(x=>x.type===winner).text.split(' ')[0]}!`;
-  resultImg.src=`images/${winner}.png`;
+  resultName.innerText=`You are ${characters[winner].name}!`;
+  resultImg.src=characters[winner].img;
   resultDiv.style.display='block';
   launchFireworks();
 }

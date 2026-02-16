@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Hazbin Hotel Character Test</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BC9EDMP03V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BC9EDMP03V');
+</script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
@@ -102,6 +112,7 @@ img{width:150px;border-radius:50%;margin-top:15px;}
 <div id="character-name"></div>
 
 <script>
+// Вопросы с эмодзи
 const questions=[
 ["What is your biggest strength? 🌸⚡🎉❤️😂💪",["🌸 Kindness","⚡ Intelligence","🎉 Confidence","❤️ Loyalty","😂 Humor","💪 Hard work"]],
 ["Pick a color 🎨",["🌸 Pink","🔴 Red","⚫ Black","⚪ White","🟣 Purple","💛 Yellow"]],
@@ -125,13 +136,14 @@ const questions=[
 ["Your aesthetic 🎨",["🌸 Soft","😈 Vintage horror","🎉 Glam chaos","🛡️ Sharp","🍸 Messy bar","⚡ Cute deadly"]]
 ];
 
+// Персонажи
 const characters=[
-{name:"Charlie",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Kind, optimistic and believes everyone deserves a second chance."},
-{name:"Alastor",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Calm, powerful and always in control with a dark sense of humor."},
-{name:"Angel Dust",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Flirty, chaotic and loves having fun no matter what."},
-{name:"Vaggie",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Loyal, protective and always ready to fight for those she loves."},
-{name:"Husk",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Tired, sarcastic and just wants peace and a drink."},
-{name:"Niffty",img:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACz...",desc:"Energetic, obsessive and loves keeping everything clean."}
+{name:"Charlie",img:"https://i.imgur.com/XdW6w1r.png",desc:"Kind, optimistic and believes everyone deserves a second chance."},
+{name:"Alastor",img:"https://i.imgur.com/Bi5p9Jr.png",desc:"Calm, powerful and always in control with a dark sense of humor."},
+{name:"Angel Dust",img:"https://i.imgur.com/TY3x1Vz.png",desc:"Flirty, chaotic and loves having fun no matter what."},
+{name:"Vaggie",img:"https://i.imgur.com/6myT6mY.png",desc:"Loyal, protective and always ready to fight for those she loves."},
+{name:"Husk",img:"https://i.imgur.com/Fz1Kf9V.png",desc:"Tired, sarcastic and just wants peace and a drink."},
+{name:"Niffty",img:"https://i.imgur.com/Q0r7Qsm.png",desc:"Energetic, obsessive and loves keeping everything clean."}
 ];
 
 let current=0;
@@ -181,13 +193,13 @@ function bigConfetti(){
     div.className="confetti";
     div.style.background="hsl("+Math.random()*360+",100%,50%)";
     div.style.left=Math.random()*100+"%"; // равномерно по ширине
-    div.style.top="-20px"; // сверху
+    div.style.top="-20px"; // старт сверху
     div.style.width=(5+Math.random()*10)+"px";
     div.style.height=(5+Math.random()*10)+"px";
     document.body.appendChild(div);
     let speed=1+Math.random()*3;
     let fall=setInterval(()=>{
-      let top=parseFloat(div.style.top);
+      let top = parseFloat(div.style.top);
       if(top>window.innerHeight){clearInterval(fall); div.remove();}
       else div.style.top=top+speed+"px";
     },20);

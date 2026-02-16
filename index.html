@@ -2,261 +2,241 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mag Battle Quiz</title>
 <style>
-body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom, #1f1c2c, #928dab);
-  color: white;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-h1 {
-  font-size: 2.5em;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-#question {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-}
-.answers {
-  display: block;
-  margin-bottom: 30px;
-}
-.answer {
-  display: block;
-  background: rgba(255,255,255,0.1);
-  padding: 15px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-  margin: 10px auto;
-  width: 60%;
-  text-align: center;
-}
-.answer:hover {
-  background: rgba(255,255,255,0.3);
-  transform: scale(1.05);
-}
-#result {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.6);
-  padding: 30px;
-  border-radius: 20px;
-  max-width: 90%;
-}
-#result img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  margin-top: 20px;
-}
-#restartBtn {
-  display: block;
-  margin: 20px auto 0 auto;
-  padding: 12px 25px;
-  font-size: 1em;
-  background: gold;
-  color: black;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-#restartBtn:hover {
-  background: orange;
-}
-.firework {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: gold;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: fall 2s linear infinite;
-}
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity:1; }
-  100% { transform: translateY(600px) rotate(720deg); opacity:0; }
-}
+  body {
+    margin:0;
+    padding:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #1f1c2c, #928dab);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: space-between;
+  }
+  #quiz-container {
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+  }
+  #quiz-title {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+  #question-number {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  #question {
+    font-size: 1.5em;
+    margin: 20px 0;
+    text-align: center;
+  }
+  #answers {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 500px;
+  }
+  .answer {
+    background: #3a3a5c;
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: all 0.2s ease;
+  }
+  .answer:hover {
+    background: #5c5ca1;
+    transform: scale(1.05);
+  }
+  #emoji-footer {
+    font-size: 2.5em;
+    text-align: center;
+    padding: 15px;
+    background: rgba(0,0,0,0.2);
+  }
+  #result {
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    display:none;
+    width: 90%;
+    max-width: 600px;
+  }
+  #result img {
+    width:200px;
+    height:200px;
+    border-radius: 50%;
+    margin: 15px 0;
+  }
+  #restart-btn {
+    margin-top: 15px;
+    padding: 12px 25px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    background: #5c5ca1;
+    color: #fff;
+  }
+  /* Салюты */
+  .firework {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: gold;
+    border-radius: 50%;
+    pointer-events: none;
+    animation-name: fall;
+    animation-timing-function: linear;
+  }
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity:1; }
+    100% { transform: translateY(800px) rotate(360deg); opacity:0; }
+  }
 </style>
 </head>
 <body>
 
-<h1>Who Are You in Mag Battle? ⚡</h1>
-<div id="question"></div>
-<div class="answers" id="answers"></div>
+<div id="quiz-container">
+  <h1 id="quiz-title">Who Are You in Mag Battle? ⚡</h1>
+  <div id="question-number">Question 1/20</div>
+  <div id="question">Loading...</div>
+  <div id="answers"></div>
+</div>
+
+<div id="emoji-footer">😈 😇 😎 👹 🐉 🔥 💀</div>
 
 <div id="result">
-  <h2 id="resultName"></h2>
-  <img id="resultImg" src="">
-  <button id="restartBtn">Пройти снова 🔄</button>
+  <h2 id="result-name"></h2>
+  <img id="result-img" src="" alt="Character">
+  <p id="result-desc"></p>
+  <button id="restart-btn">Пройти снова 🔄</button>
 </div>
 
 <script>
-// Персонажи и картинки
-const characters={
-  gojo:{name:"Gojo 😎", img:"images/gojo.png"},
-  yuji:{name:"Yuji 💪", img:"images/yuji.png"},
-  megumi:{name:"Megumi 🐺", img:"images/megumi.png"},
-  nobara:{name:"Nobara 🔨", img:"images/nobara.png"},
-  sukuna:{name:"Sukuna 😈", img:"images/sukuna.png"},
-  yuta:{name:"Yuta 🖤", img:"images/yuta.png"},
-  toji:{name:"Toji 🗡️", img:"images/toji.png"}
+const characters = {
+  gojo: {name:"Gojo 😎", img:"images/gojo.png", desc:"Gojo — сильный и непредсказуемый маг, любит рисковать и быть лидером."},
+  yuji: {name:"Yuji 💪", img:"images/yuji.png", desc:"Yuji — смелый и решительный, всегда готов защищать друзей и бороться со злом."},
+  megumi: {name:"Megumi 🐺", img:"images/megumi.png", desc:"Megumi — сдержанный и умный, отлично планирует свои действия и действует тактически."},
+  nobara: {name:"Nobara 🔨", img:"images/nobara.png", desc:"Nobara — стильная и решительная, всегда добивается цели с уверенностью и смелостью."},
+  sukuna: {name:"Sukuna 😈", img:"images/sukuna.png", desc:"Sukuna — опасный и сильный демон, тебе он больше всего подходит, если любишь силу и дерзость."},
+  yuta: {name:"Yuta 🖤", img:"images/yuta.png", desc:"Yuta — таинственный и загадочный, умеет удивлять и держать ситуацию под контролем."},
+  toji: {name:"Toji 🗡️", img:"images/toji.png", desc:"Toji — быстрый и смертоносный, предпочитает решительные действия и неожиданные атаки."}
 };
 
-// 20 вопросов с 7 вариантами
-const questions=[
-{q:"Your energy today? ✨",a:[
-{text:"I shine without trying 😎",type:"gojo"},
-{text:"I just want everyone safe 💪",type:"yuji"},
-{text:"Quiet but focused 🐺",type:"megumi"},
-{text:"Confident and stylish 💅",type:"nobara"},
-{text:"Dark and unstoppable 😈",type:"sukuna"},
-{text:"Soft but powerful 🖤",type:"yuta"},
-{text:"Cold and independent 🗡️",type:"toji"}]},
-{q:"Your ideal power? 🔮",a:[
-{text:"Limitless dominance 🌌",type:"gojo"},
-{text:"Raw physical strength 👊",type:"yuji"},
-{text:"Summoning shadows 🐺",type:"megumi"},
-{text:"Precise cursed technique 🔨",type:"nobara"},
-{text:"Absolute destruction 🔥",type:"sukuna"},
-{text:"Boundless cursed energy 💫",type:"yuta"},
-{text:"Perfect weapon mastery ⚔️",type:"toji"}]},
-{q:"Your vibe in battle? ⚔️",a:[
-{text:"Untouchable and smiling 😏",type:"gojo"},
-{text:"Fearless and loyal 🤝",type:"yuji"},
-{text:"Strategic and calm 🧠",type:"megumi"},
-{text:"Sharp and fearless 💥",type:"nobara"},
-{text:"Brutal and dominant 👑",type:"sukuna"},
-{text:"Protective and focused 🛡️",type:"yuta"},
-{text:"Fast and lethal ⚡",type:"toji"}]},
-{q:"Your personality? 💭",a:[
-{text:"Playful genius 🌀",type:"gojo"},
-{text:"Kind-hearted hero ❤️",type:"yuji"},
-{text:"Serious thinker 📖",type:"megumi"},
-{text:"Bold queen 👠",type:"nobara"},
-{text:"Proud king 👑",type:"sukuna"},
-{text:"Gentle soul 🌙",type:"yuta"},
-{text:"Lone wolf 🐺",type:"toji"}]},
-{q:"Your role in a team? 🤝",a:[
-{text:"Leader everyone trusts 🧿",type:"gojo"},
-{text:"The heart of the group 💛",type:"yuji"},
-{text:"The brain behind plans 🧠",type:"megumi"},
-{text:"The motivator 🔥",type:"nobara"},
-{text:"The boss 😈",type:"sukuna"},
-{text:"The protector 🛡️",type:"yuta"},
-{text:"Works alone 🚶",type:"toji"}]},
-{q:"Your fighting style? 🥋",a:[
-{text:"Unpredictable & flashy ⚡",type:"gojo"},
-{text:"Full of stamina 💪",type:"yuji"},
-{text:"Calculated strikes 🐺",type:"megumi"},
-{text:"Quick combos 🔨",type:"nobara"},
-{text:"Overpower with skill 😈",type:"sukuna"},
-{text:"Versatile & tricky 🖤",type:"yuta"},
-{text:"Direct & deadly ⚔️",type:"toji"}]},
-{q:"Your favorite weapon? 🗡️",a:[
-{text:"Cursed Limitless hands ✋",type:"gojo"},
-{text:"Bare fists 👊",type:"yuji"},
-{text:"Shikigami summons 🐺",type:"megumi"},
-{text:"Hammer or nails 🔨",type:"nobara"},
-{text:"Cursed fingers 😈",type:"sukuna"},
-{text:"Sword/katana 💫",type:"yuta"},
-{text:"Any sharp blade ⚔️",type:"toji"}]},
-{q:"Your teamwork? 🤝",a:[
-{text:"Guide everyone 😎",type:"gojo"},
-{text:"Protect friends 💪",type:"yuji"},
-{text:"Support from shadows 🐺",type:"megumi"},
-{text:"Boost morale 🔨",type:"nobara"},
-{text:"Lead ruthlessly 😈",type:"sukuna"},
-{text:"Watch & protect 🖤",type:"yuta"},
-{text:"Independent & lethal ⚔️",type:"toji"}]},
-{q:"Your mood? 😏",a:[
-{text:"Playful & carefree 😎",type:"gojo"},
-{text:"Happy & kind 💛",type:"yuji"},
-{text:"Serious & calm 🐺",type:"megumi"},
-{text:"Confident & bold 🔨",type:"nobara"},
-{text:"Sinister & strong 😈",type:"sukuna"},
-{text:"Gentle & composed 🖤",type:"yuta"},
-{text:"Cold & precise ⚔️",type:"toji"}]},
-{q:"Your speed? ⚡",a:[
-{text:"Faster than thought ⚡",type:"gojo"},
-{text:"Quick but raw 💪",type:"yuji"},
-{text:"Calculated & swift 🐺",type:"megumi"},
-{text:"Agile & precise 🔨",type:"nobara"},
-{text:"Explosive speed 😈",type:"sukuna"},
-{text:"Smooth & controlled 🖤",type:"yuta"},
-{text:"Deadly fast ⚔️",type:"toji"}]},
-// Добавь остальные 10 вопросов аналогично, чтобы всего было 20
-// Для экономии места здесь пока 10
+const questions = [
+  {q:"Your energy today?", a:["High and unstoppable 😈","Calm and steady 😇","Focused and clever 😎","Impulsive and wild 👹","Dark and mysterious 🖤","Cheerful and strong 💪","Fast and fierce 🗡️"]},
+  {q:"How do you face danger?", a:["Head-on attack 😈","Plan carefully 😇","Outsmart opponent 😎","Use charm 👹","Scare others 🖤","Protect friends 💪","Surprise strike 🗡️"]},
+  {q:"Your favorite place?", a:["Open battlefield 😈","Quiet library 😇","Training grounds 😎","Night city 👹","Forbidden zone 🖤","School 🏫 💪","Rooftops 🗡️"]},
+  {q:"Preferred weapon?", a:["Magic 😈","Strategy 😇","Cursed technique 😎","Anything flashy 👹","Unknown power 🖤","Physical strength 💪","Blades 🗡️"]},
+  {q:"Your personality?", a:["Reckless 😈","Thoughtful 😇","Cool 😎","Playful 👹","Intense 🖤","Friendly 💪","Deadly 🗡️"]},
+  {q:"Your best skill?", a:["Power 😈","Wisdom 😇","Speed 😎","Trickery 👹","Dark arts 🖤","Strength 💪","Assassin skills 🗡️"]},
+  {q:"Your favorite food?", a:["Spicy 🔥 😈","Healthy 😇","Balanced 😎","Street food 👹","Mysterious 🖤","Energy snacks 💪","Quick bites 🗡️"]},
+  {q:"How do friends see you?", a:["Crazy 😈","Reliable 😇","Leader 😎","Fun 👹","Scary 🖤","Loyal 💪","Silent killer 🗡️"]},
+  {q:"Your favorite color?", a:["Red 😈","Blue 😇","White 😎","Pink 👹","Black 🖤","Orange 💪","Dark gray 🗡️"]},
+  {q:"You prefer?", a:["Fight 😈","Think 😇","Train 😎","Play 👹","Chaos 🖤","Teamwork 💪","Stealth 🗡️"]},
+  {q:"Your lucky item?", a:["Cursed talisman 😈","Notebook 😇","Sunglasses 😎","Mask 👹","Dark ring 🖤","Gloves 💪","Dagger 🗡️"]},
+  {q:"Your reaction to insult?", a:["Attack 😈","Ignore 😇","Smile 😎","Joke 👹","Threaten 🖤","Laugh 💪","Disappear 🗡️"]},
+  {q:"Your dream?", a:["Dominate 😈","Knowledge 😇","Master technique 😎","Fun 👹","Chaos 🖤","Save friends 💪","Freedom 🗡️"]},
+  {q:"Preferred companion?", a:["Strong ally 😈","Wise friend 😇","Cool partner 😎","Funny buddy 👹","Dark minion 🖤","Reliable comrade 💪","Silent partner 🗡️"]},
+  {q:"Favorite time of day?", a:["Night 😈","Morning 😇","Afternoon 😎","Evening 👹","Midnight 🖤","Day 💪","Twilight 🗡️"]},
+  {q:"How do you relax?", a:["Training 😈","Meditation 😇","Gaming 😎","Pranks 👹","Alone 🖤","Exercise 💪","Hunting 🗡️"]},
+  {q:"Your strategy?", a:["Attack first 😈","Plan 😇","React 😎","Trick 👹","Intimidate 🖤","Support 💪","Ambush 🗡️"]},
+  {q:"Your style?", a:["Bold 😈","Calm 😇","Cool 😎","Playful 👹","Sinister 🖤","Strong 💪","Deadly 🗡️"]},
+  {q:"Your mood?", a:["Energetic 😈","Peaceful 😇","Confident 😎","Mischievous 👹","Dark 🖤","Happy 💪","Focused 🗡️"]},
+  {q:"Your approach to challenge?", a:["Head-on 😈","Smart 😇","Quick 😎","Funny 👹","Intense 🖤","Team 💪","Silent 🗡️"]}
 ];
 
-let current=0;
-let scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+let scores = {gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+let current = 0;
 
-const questionDiv=document.getElementById('question');
-const answersDiv=document.getElementById('answers');
-const resultDiv=document.getElementById('result');
-const resultName=document.getElementById('resultName');
-const resultImg=document.getElementById('resultImg');
-const restartBtn=document.getElementById('restartBtn');
+const questionEl = document.getElementById('question');
+const answersEl = document.getElementById('answers');
+const questionNumberEl = document.getElementById('question-number');
+const resultEl = document.getElementById('result');
+const resultName = document.getElementById('result-name');
+const resultImg = document.getElementById('result-img');
+const resultDesc = document.getElementById('result-desc');
+const restartBtn = document.getElementById('restart-btn');
 
 function showQuestion(){
   if(current>=questions.length){
     showResult();
     return;
   }
-  questionDiv.innerText=questions[current].q;
-  answersDiv.innerHTML='';
-  questions[current].a.forEach(ans=>{
-    const btn=document.createElement('div');
+  questionEl.textContent = questions[current].q;
+  questionNumberEl.textContent = `Question ${current+1}/20`;
+  answersEl.innerHTML='';
+  questions[current].a.forEach((ans,i)=>{
+    const btn = document.createElement('button');
     btn.className='answer';
-    btn.innerText=ans.text;
-    btn.onclick=()=>{
-      scores[ans.type]++;
+    btn.textContent = ans;
+    btn.onclick = ()=>{
+      const charKeys = Object.keys(characters);
+      scores[charKeys[i]] +=1;
       current++;
       showQuestion();
     };
-    answersDiv.appendChild(btn);
+    answersEl.appendChild(btn);
   });
 }
 
 function showResult(){
-  const winner=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-  resultName.innerText=`You are ${characters[winner].name}!`;
+  questionEl.style.display='none';
+  answersEl.style.display='none';
+  questionNumberEl.style.display='none';
+  resultEl.style.display='block';
+  let maxScore=-1;
+  let winner='';
+  for(let c in scores){
+    if(scores[c]>maxScore){
+      maxScore=scores[c];
+      winner=c;
+    }
+  }
+  resultName.textContent=characters[winner].name;
   resultImg.src=characters[winner].img;
-  resultDiv.style.display='block';
+  resultDesc.textContent=characters[winner].desc;
   launchFireworks();
+}
+
+restartBtn.onclick = ()=>{
+  scores = {gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+  current=0;
+  resultEl.style.display='none';
+  questionEl.style.display='block';
+  answersEl.style.display='flex';
+  questionNumberEl.style.display='block';
+  showQuestion();
 }
 
 function launchFireworks(){
   for(let i=0;i<50;i++){
-    const fire=document.createElement('div');
-    fire.className='firework';
-    fire.style.left=Math.random()*window.innerWidth+'px';
-    fire.style.animationDuration=(1+Math.random()*1)+'s';
-    document.body.appendChild(fire);
-    setTimeout(()=>fire.remove(),2000);
+    const f = document.createElement('div');
+    f.className='firework';
+    f.style.left=Math.random()*window.innerWidth+'px';
+    f.style.animationDuration=(2+Math.random()*2)+'s';
+    document.body.appendChild(f);
+    setTimeout(()=>{f.remove();},4000);
   }
 }
 
-// Перезапуск теста
-restartBtn.onclick=()=>{
-  current=0;
-  scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
-  resultDiv.style.display='none';
-  showQuestion();
-};
-
 showQuestion();
 </script>
+
 </body>
 </html>

@@ -2,211 +2,333 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hazbin Hotel Character Test</title>
+<title>Which Jujutsu Kaisen Character Are You?</title>
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BC9EDMP03V"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-BC9EDMP03V');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BC9EDMP03V');
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
 body{
-  font-family:'Roboto', sans-serif;
-  margin:0;
-  padding:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background: linear-gradient(120deg,#1a1a2e,#2b2b50);
-  color:white;
-  overflow:hidden;
+font-family: Arial, sans-serif;
+margin:0;
+background:linear-gradient(180deg,#0f0f1f,#1a1a3a);
+color:white;
+text-align:center;
 }
 
-.card{
-  background: rgba(43,43,61,0.95);
-  padding: 25px 20px;
-  margin: 20px auto;
-  border-radius: 20px;
-  max-width:600px;
-  box-shadow:0 0 30px rgba(0,0,0,0.6);
-  text-align:center;
+#quiz{
+max-width:800px;
+margin:40px auto;
+padding:20px;
+background:rgba(0,0,0,0.6);
+border-radius:20px;
+box-shadow:0 0 20px #000;
 }
-
-h1{margin-bottom:10px;}
 
 button{
-  display:block;
-  width:100%;
-  margin:10px 0;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background: linear-gradient(90deg,#ff4e50,#ff6f70);
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  transition:0.3s;
+display:block;
+margin:10px auto;
+padding:12px 20px;
+border:none;
+border-radius:12px;
+background:#ff4c9b;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
 }
-
 button:hover{
-  transform:scale(1.05);
-  background:linear-gradient(90deg,#ff6f70,#ff4e50);
+background:#ff77b8;
+transform:scale(1.05);
 }
 
-.progress{height:10px;background:#444;border-radius:10px;margin-bottom:20px;}
-.bar{height:10px;background:#ff4e50;width:0%;border-radius:10px;}
-
-img{width:150px;border-radius:50%;margin-top:15px;}
-
-.again-button{
-  margin-top:15px;
-  padding:12px 20px;
-  font-size:18px;
-  background: #ffce00;
-  color:#1e1e2f;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
+#result img{
+width:200px;
+border-radius:20px;
+margin-top:15px;
 }
-
-.again-button:hover{transform:scale(1.05);}
 
 .confetti{
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  z-index: 9999;
-  pointer-events: none;
-  border-radius:50%;
-  opacity: 0.9;
+position:fixed;
+top:-10px;
+width:10px;
+height:10px;
+background:red;
+opacity:0.8;
+animation:fall linear forwards;
 }
 
-#character-name{
-  position: fixed;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  font-size:60px;
-  font-weight:bold;
-  color:#ffce00;
-  text-shadow: 2px 2px 15px black;
-  display:none;
-  z-index:9998;
+@keyframes fall{
+to{
+transform:translateY(110vh) rotate(720deg);
+}
 }
 </style>
 </head>
 <body>
-<div class="card" id="quiz-container">
-  <h1>Which Hazbin Hotel Character Are You?</h1>
-  <div class="progress"><div class="bar" id="bar"></div></div>
-  <div id="quiz"></div>
+
+<div id="quiz">
+<h1>Which Jujutsu Kaisen Character Are You? 🔮</h1>
+<div id="question"></div>
+<div id="answers"></div>
 </div>
 
-<div id="character-name"></div>
+<div id="result" style="display:none;"></div>
 
 <script>
-// Вопросы с эмодзи
-const questions=[
-["What is your biggest strength? 🌸⚡🎉❤️😂💪",["🌸 Kindness","⚡ Intelligence","🎉 Confidence","❤️ Loyalty","😂 Humor","💪 Hard work"]],
-["Pick a color 🎨",["🌸 Pink","🔴 Red","⚫ Black","⚪ White","🟣 Purple","💛 Yellow"]],
-["How do you handle conflict? 🤔",["☮️ Peacefully","🧠 Manipulate","💥 Fight","🛡️ Protect","🙈 Avoid","😰 Stress"]],
-["Your ideal role in a group 🏆",["👑 Leader","🧩 Strategist","🎲 Wild card","🛡️ Protector","👀 Observer","🤝 Helper"]],
-["What motivates you most? 🔥",["🌸 Helping others","⚡ Power","🎉 Fun","❤️ Love","💰 Money","🏆 Recognition"]],
-["Pick a hobby 🎶",["🎤 Singing","🧠 Mind games","💃 Partying","🏋️ Training","🎲 Gambling","🧹 Cleaning"]],
-["Your biggest flaw ❌",["🌸 Too trusting","🧠 Controlling","💥 Reckless","🛡️ Overprotective","😴 Lazy","😰 Anxious"]],
-["Choose a weapon 🗡️",["🗣️ Words","✨ Magic","🔫 Guns","🗡️ Spear","🃏 Cards","🔪 Knife"]],
-["How do people see you? 👀",["🌸 Sweet","😈 Scary","💃 Flirty","🛡️ Serious","😴 Tired","⚡ Energetic"]],
-["Your vibe ✨",["🌸 Hopeful","😈 Calm chaos","🎉 Loud chaos","🛡️ Focused","😴 Done","⚡ Hyper"]],
-["Pick a place 📍",["🏨 Hotel","📻 Radio","💃 Club","🏋️ Training room","🍸 Bar","🍳 Kitchen"]],
-["What do you value most? 💎",["🌸 Redemption","⚡ Control","🎉 Freedom","❤️ Trust","😴 Peace","⚡ Order"]],
-["Your fear 😱",["🌸 Failing others","⚡ Losing power","😈 Being controlled","❤️ Losing someone","😴 Responsibility","⚡ Being ignored"]],
-["Pick a quote vibe 🗨️",["🌸 Everyone deserves a chance","😈 Smile, dear","🎉 Let’s make it fun","🛡️ Stay behind me","🍸 Pour me another drink","⚡ Everything must be perfect"]],
-["Energy level ⚡",["🌸 Warm","😈 Dangerous calm","🎉 Chaotic","🛡️ Focused","😴 Low","⚡ High"]],
-["How do you make decisions? 🤔",["❤️ Heart","🧠 Logic","⚡ Instinct","🛡️ Strategy","🙈 Avoid","😰 Overthink"]],
-["Pick a drink 🥤",["🍵 Tea","☕ Coffee","🍹 Cocktail","💧 Water","🥃 Whiskey","🧃 Juice"]],
-["Your role in chaos 🔥",["☮️ Stop it","😈 Cause quietly","🎉 Enjoy","🛡️ Control","🙈 Ignore","🧹 Clean after"]],
-["How loyal are you? 💖",["🌸 Very","🧠 Myself","⚡ Depends","❤️ Extremely","😴 Not really","🏆 To my work"]],
-["Your aesthetic 🎨",["🌸 Soft","😈 Vintage horror","🎉 Glam chaos","🛡️ Sharp","🍸 Messy bar","⚡ Cute deadly"]]
-];
 
-// Персонажи
-const characters=[
-{name:"Charlie",img:"https://i.imgur.com/XdW6w1r.png",desc:"Kind, optimistic and believes everyone deserves a second chance."},
-{name:"Alastor",img:"https://i.imgur.com/Bi5p9Jr.png",desc:"Calm, powerful and always in control with a dark sense of humor."},
-{name:"Angel Dust",img:"https://i.imgur.com/TY3x1Vz.png",desc:"Flirty, chaotic and loves having fun no matter what."},
-{name:"Vaggie",img:"https://i.imgur.com/6myT6mY.png",desc:"Loyal, protective and always ready to fight for those she loves."},
-{name:"Husk",img:"https://i.imgur.com/Fz1Kf9V.png",desc:"Tired, sarcastic and just wants peace and a drink."},
-{name:"Niffty",img:"https://i.imgur.com/Q0r7Qsm.png",desc:"Energetic, obsessive and loves keeping everything clean."}
+const characters={
+gojo:{name:"Gojo 😎",img:"https://i.imgur.com/1X6KQwB.png"},
+yuji:{name:"Yuji 💪",img:"https://i.imgur.com/tV0b9YF.png"},
+megumi:{name:"Megumi 🐺",img:"https://i.imgur.com/0r0XH0H.png"},
+nobara:{name:"Nobara 🔨",img:"https://i.imgur.com/2yAfWgG.png"},
+sukuna:{name:"Sukuna 😈",img:"https://i.imgur.com/kK7V7rP.png"},
+yuta:{name:"Yuta 🖤",img:"https://i.imgur.com/3ZQ3Z2m.png"},
+toji:{name:"Toji 🗡️",img:"https://i.imgur.com/4AiXzf8.png"}
+};
+
+let scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+
+const questions=[
+{q:"Your mood today? 😏",a:[
+{text:"Confident king",type:"gojo"},
+{text:"Ready to help",type:"yuji"},
+{text:"Calm and quiet",type:"megumi"},
+{text:"Stylish energy",type:"nobara"},
+{text:"Chaos",type:"sukuna"},
+{text:"Soft but strong",type:"yuta"},
+{text:"Lone wolf",type:"toji"}]},
+
+{q:"Your fighting style? 🥊",a:[
+{text:"Overpowered",type:"gojo"},
+{text:"Punch first",type:"yuji"},
+{text:"Strategy",type:"megumi"},
+{text:"Precise hits",type:"nobara"},
+{text:"Destroy everything",type:"sukuna"},
+{text:"Protect others",type:"yuta"},
+{text:"Speed and weapons",type:"toji"}]},
+
+{q:"Your biggest strength? 💥",a:[
+{text:"Talent",type:"gojo"},
+{text:"Kind heart",type:"yuji"},
+{text:"Intelligence",type:"megumi"},
+{text:"Confidence",type:"nobara"},
+{text:"Power",type:"sukuna"},
+{text:"Loyalty",type:"yuta"},
+{text:"Independence",type:"toji"}]},
+
+{q:"Pick a vibe 🖤",a:[
+{text:"Main character",type:"gojo"},
+{text:"Hero",type:"yuji"},
+{text:"Shadow",type:"megumi"},
+{text:"Fashion icon",type:"nobara"},
+{text:"Villain energy",type:"sukuna"},
+{text:"Quiet protector",type:"yuta"},
+{text:"Anti-hero",type:"toji"}]},
+
+{q:"Your role in team? 🤝",a:[
+{text:"Leader",type:"gojo"},
+{text:"Heart",type:"yuji"},
+{text:"Brain",type:"megumi"},
+{text:"Motivator",type:"nobara"},
+{text:"Boss",type:"sukuna"},
+{text:"Support",type:"yuta"},
+{text:"Solo",type:"toji"}]},
+
+{q:"Favorite color? 🎨",a:[
+{text:"Blue",type:"gojo"},
+{text:"Red",type:"yuji"},
+{text:"Black",type:"megumi"},
+{text:"Pink",type:"nobara"},
+{text:"Dark red",type:"sukuna"},
+{text:"White",type:"yuta"},
+{text:"Green",type:"toji"}]},
+
+{q:"Your weakness? 😅",a:[
+{text:"Too strong",type:"gojo"},
+{text:"Too kind",type:"yuji"},
+{text:"Overthinking",type:"megumi"},
+{text:"Stubborn",type:"nobara"},
+{text:"Ego",type:"sukuna"},
+{text:"Self doubt",type:"yuta"},
+{text:"Trust issues",type:"toji"}]},
+
+{q:"Your weapon? ⚔️",a:[
+{text:"Infinity",type:"gojo"},
+{text:"Fists",type:"yuji"},
+{text:"Shikigami",type:"megumi"},
+{text:"Hammer",type:"nobara"},
+{text:"Cleave",type:"sukuna"},
+{text:"Katana",type:"yuta"},
+{text:"Spear",type:"toji"}]},
+
+{q:"Pick food 🍜",a:[
+{text:"Anything expensive",type:"gojo"},
+{text:"Fast food",type:"yuji"},
+{text:"Simple meal",type:"megumi"},
+{text:"Desserts",type:"nobara"},
+{text:"Blood (jk)",type:"sukuna"},
+{text:"Homemade",type:"yuta"},
+{text:"Protein",type:"toji"}]},
+
+{q:"Your hobby? 🎮",a:[
+{text:"Flexing",type:"gojo"},
+{text:"Sports",type:"yuji"},
+{text:"Training",type:"megumi"},
+{text:"Shopping",type:"nobara"},
+{text:"Destroying",type:"sukuna"},
+{text:"Reading",type:"yuta"},
+{text:"Working out",type:"toji"}]},
+
+// ещё 10 вопросов (короче но прикольно)
+
+{q:"Night or day? 🌙",a:[
+{text:"Day",type:"gojo"},
+{text:"Day",type:"yuji"},
+{text:"Night",type:"megumi"},
+{text:"Day",type:"nobara"},
+{text:"Night",type:"sukuna"},
+{text:"Night",type:"yuta"},
+{text:"Night",type:"toji"}]},
+
+{q:"Your fear? 👀",a:[
+{text:"Nothing",type:"gojo"},
+{text:"Losing friends",type:"yuji"},
+{text:"Failure",type:"megumi"},
+{text:"Being ignored",type:"nobara"},
+{text:"Boredom",type:"sukuna"},
+{text:"Hurting others",type:"yuta"},
+{text:"Attachment",type:"toji"}]},
+
+{q:"Pick animal 🐺",a:[
+{text:"Dragon",type:"gojo"},
+{text:"Dog",type:"yuji"},
+{text:"Wolf",type:"megumi"},
+{text:"Cat",type:"nobara"},
+{text:"Tiger",type:"sukuna"},
+{text:"Fox",type:"yuta"},
+{text:"Hawk",type:"toji"}]},
+
+{q:"Your vibe in class 📚",a:[
+{text:"Teacher",type:"gojo"},
+{text:"Friendly",type:"yuji"},
+{text:"Quiet",type:"megumi"},
+{text:"Popular",type:"nobara"},
+{text:"Doesn't care",type:"sukuna"},
+{text:"Top student",type:"yuta"},
+{text:"Skipped",type:"toji"}]},
+
+{q:"Your aura ✨",a:[
+{text:"Unlimited",type:"gojo"},
+{text:"Warm",type:"yuji"},
+{text:"Cold",type:"megumi"},
+{text:"Bright",type:"nobara"},
+{text:"Dark",type:"sukuna"},
+{text:"Pure",type:"yuta"},
+{text:"Deadly",type:"toji"}]},
+
+{q:"Pick a quote 🗣️",a:[
+{text:"I'm the strongest",type:"gojo"},
+{text:"I'll save everyone",type:"yuji"},
+{text:"I do what I must",type:"megumi"},
+{text:"I look good",type:"nobara"},
+{text:"Bow to me",type:"sukuna"},
+{text:"I will protect",type:"yuta"},
+{text:"I work alone",type:"toji"}]},
+
+{q:"Your speed? ⚡",a:[
+{text:"Teleport",type:"gojo"},
+{text:"Fast",type:"yuji"},
+{text:"Medium",type:"megumi"},
+{text:"Stylish fast",type:"nobara"},
+{text:"Demonic fast",type:"sukuna"},
+{text:"Swift",type:"yuta"},
+{text:"Blitz",type:"toji"}]},
+
+{q:"Your goal 🎯",a:[
+{text:"Have fun",type:"gojo"},
+{text:"Help people",type:"yuji"},
+{text:"Get stronger",type:"megumi"},
+{text:"Live stylish",type:"nobara"},
+{text:"Rule",type:"sukuna"},
+{text:"Protect loved ones",type:"yuta"},
+{text:"Survive",type:"toji"}]},
+
+{q:"Pick weather 🌧️",a:[
+{text:"Sunny",type:"gojo"},
+{text:"Warm",type:"yuji"},
+{text:"Rainy",type:"megumi"},
+{text:"Spring",type:"nobara"},
+{text:"Storm",type:"sukuna"},
+{text:"Snow",type:"yuta"},
+{text:"Windy",type:"toji"}]},
+
+{q:"Final question: your destiny 🔮",a:[
+{text:"Legend",type:"gojo"},
+{text:"Hero",type:"yuji"},
+{text:"Sorcerer",type:"megumi"},
+{text:"Queen",type:"nobara"},
+{text:"King of curses",type:"sukuna"},
+{text:"Guardian",type:"yuta"},
+{text:"Ghost",type:"toji"}]}
 ];
 
 let current=0;
-let scores=[0,0,0,0,0,0];
 
 function showQuestion(){
-  if(current>=questions.length){showResult();return;}
-  let q=questions[current];
-  let html=`<h2>${q[0]}</h2>`;
-  q[1].forEach((a,i)=>{html+=`<button onclick="answer(${i})">${a}</button>`});
-  document.getElementById("quiz").innerHTML=html;
-  document.getElementById("bar").style.width=(current/questions.length*100)+"%";
-}
-
-function answer(i){
-  scores[i]++;
-  current++;
-  showQuestion();
+const q=questions[current];
+document.getElementById("question").innerHTML="<h2>"+q.q+"</h2>";
+const answersDiv=document.getElementById("answers");
+answersDiv.innerHTML="";
+q.a.forEach(ans=>{
+const btn=document.createElement("button");
+btn.textContent=ans.text;
+btn.onclick=()=>{
+scores[ans.type]++;
+current++;
+if(current<questions.length){showQuestion();}
+else{showResult();}
+};
+answersDiv.appendChild(btn);
+});
 }
 
 function showResult(){
-  let max=scores.indexOf(Math.max(...scores));
-  let c=characters[max];
-  const nameDiv=document.getElementById("character-name");
-  nameDiv.innerText=c.name.toUpperCase()+" 🎉";
-  nameDiv.style.display="block";
-  document.getElementById("quiz").innerHTML=`
-  <img src="${c.img}">
-  <p>${c.desc}</p>
-  <button class="again-button" onclick="restart()">Take the test again</button>
-  `;
-  document.getElementById("bar").style.width="100%";
-  bigConfetti();
+document.getElementById("quiz").style.display="none";
+
+let winner=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+
+document.getElementById("result").style.display="block";
+document.getElementById("result").innerHTML=`
+<h1>You are ${characters[winner].name} 🎉</h1>
+<img src="${characters[winner].img}">
+<br><br>
+<button onclick="location.reload()">Try again 🔄</button>
+`;
+
+confettiRain();
 }
 
-function restart(){
-  current=0;
-  scores=[0,0,0,0,0,0];
-  document.getElementById("character-name").style.display="none";
-  showQuestion();
+function confettiRain(){
+for(let i=0;i<150;i++){
+let conf=document.createElement("div");
+conf.className="confetti";
+conf.style.left=Math.random()*100+"vw";
+conf.style.animationDuration=(Math.random()*3+2)+"s";
+conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+document.body.appendChild(conf);
+setTimeout(()=>conf.remove(),5000);
 }
-
-// 🎆 Конфетти-дождь по всей ширине
-function bigConfetti(){
-  for(let i=0;i<300;i++){
-    let div=document.createElement("div");
-    div.className="confetti";
-    div.style.background="hsl("+Math.random()*360+",100%,50%)";
-    div.style.left=Math.random()*100+"%"; // равномерно по ширине
-    div.style.top="-20px"; // старт сверху
-    div.style.width=(5+Math.random()*10)+"px";
-    div.style.height=(5+Math.random()*10)+"px";
-    document.body.appendChild(div);
-    let speed=1+Math.random()*3;
-    let fall=setInterval(()=>{
-      let top = parseFloat(div.style.top);
-      if(top>window.innerHeight){clearInterval(fall); div.remove();}
-      else div.style.top=top+speed+"px";
-    },20);
-  }
 }
 
 showQuestion();
+
 </script>
 </body>
 </html>

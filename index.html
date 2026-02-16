@@ -2,333 +2,263 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Which Jujutsu Kaisen Character Are You?</title>
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BC9EDMP03V"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-BC9EDMP03V');
-</script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mag Battle Quiz</title>
 <style>
-body{
-font-family: Arial, sans-serif;
-margin:0;
-background:linear-gradient(180deg,#0f0f1f,#1a1a3a);
-color:white;
-text-align:center;
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
-
-#quiz{
-max-width:800px;
-margin:40px auto;
-padding:20px;
-background:rgba(0,0,0,0.6);
-border-radius:20px;
-box-shadow:0 0 20px #000;
+h1 {
+  font-size: 3em;
+  margin-top: 20px;
+  margin-bottom: 40px;
 }
-
-button{
-display:block;
-margin:10px auto;
-padding:12px 20px;
-border:none;
-border-radius:12px;
-background:#ff4c9b;
-color:white;
-font-size:16px;
-cursor:pointer;
-transition:0.3s;
+#question { font-size: 1.5em; margin-bottom: 20px; }
+.answers { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; }
+.answer { background: rgba(255,255,255,0.1); padding: 15px 20px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+.answer:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+#result { display: none; margin-top: 30px; }
+#result img { width: 200px; height: 200px; border-radius: 50%; margin-top: 20px; }
+.firework {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: gold;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fall 2s linear infinite;
 }
-button:hover{
-background:#ff77b8;
-transform:scale(1.05);
-}
-
-#result img{
-width:200px;
-border-radius:20px;
-margin-top:15px;
-}
-
-.confetti{
-position:fixed;
-top:-10px;
-width:10px;
-height:10px;
-background:red;
-opacity:0.8;
-animation:fall linear forwards;
-}
-
-@keyframes fall{
-to{
-transform:translateY(110vh) rotate(720deg);
-}
+@keyframes fall {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  100% { transform: translateY(600px) rotate(720deg); opacity:0; }
 }
 </style>
 </head>
 <body>
 
-<div id="quiz">
-<h1>Which Jujutsu Kaisen Character Are You? 🔮</h1>
+<h1>Who Are You in Mag Battle? ⚡</h1>
 <div id="question"></div>
-<div id="answers"></div>
+<div class="answers" id="answers"></div>
+<div id="result">
+  <h2 id="resultName"></h2>
+  <img id="resultImg" src="">
 </div>
 
-<div id="result" style="display:none;"></div>
-
 <script>
-
-const characters={
-gojo:{name:"Gojo 😎",img:"https://i.imgur.com/1X6KQwB.png"},
-yuji:{name:"Yuji 💪",img:"https://i.imgur.com/tV0b9YF.png"},
-megumi:{name:"Megumi 🐺",img:"https://i.imgur.com/0r0XH0H.png"},
-nobara:{name:"Nobara 🔨",img:"https://i.imgur.com/2yAfWgG.png"},
-sukuna:{name:"Sukuna 😈",img:"https://i.imgur.com/kK7V7rP.png"},
-yuta:{name:"Yuta 🖤",img:"https://i.imgur.com/3ZQ3Z2m.png"},
-toji:{name:"Toji 🗡️",img:"https://i.imgur.com/4AiXzf8.png"}
-};
-
-let scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
-
+// 20 вопросов, 7 персонажей
 const questions=[
-{q:"Your mood today? 😏",a:[
-{text:"Confident king",type:"gojo"},
-{text:"Ready to help",type:"yuji"},
-{text:"Calm and quiet",type:"megumi"},
-{text:"Stylish energy",type:"nobara"},
-{text:"Chaos",type:"sukuna"},
-{text:"Soft but strong",type:"yuta"},
-{text:"Lone wolf",type:"toji"}]},
-
-{q:"Your fighting style? 🥊",a:[
-{text:"Overpowered",type:"gojo"},
-{text:"Punch first",type:"yuji"},
-{text:"Strategy",type:"megumi"},
-{text:"Precise hits",type:"nobara"},
-{text:"Destroy everything",type:"sukuna"},
-{text:"Protect others",type:"yuta"},
-{text:"Speed and weapons",type:"toji"}]},
-
-{q:"Your biggest strength? 💥",a:[
-{text:"Talent",type:"gojo"},
-{text:"Kind heart",type:"yuji"},
-{text:"Intelligence",type:"megumi"},
-{text:"Confidence",type:"nobara"},
-{text:"Power",type:"sukuna"},
-{text:"Loyalty",type:"yuta"},
-{text:"Independence",type:"toji"}]},
-
-{q:"Pick a vibe 🖤",a:[
-{text:"Main character",type:"gojo"},
-{text:"Hero",type:"yuji"},
-{text:"Shadow",type:"megumi"},
-{text:"Fashion icon",type:"nobara"},
-{text:"Villain energy",type:"sukuna"},
-{text:"Quiet protector",type:"yuta"},
-{text:"Anti-hero",type:"toji"}]},
-
-{q:"Your role in team? 🤝",a:[
-{text:"Leader",type:"gojo"},
-{text:"Heart",type:"yuji"},
-{text:"Brain",type:"megumi"},
-{text:"Motivator",type:"nobara"},
-{text:"Boss",type:"sukuna"},
-{text:"Support",type:"yuta"},
-{text:"Solo",type:"toji"}]},
-
-{q:"Favorite color? 🎨",a:[
-{text:"Blue",type:"gojo"},
-{text:"Red",type:"yuji"},
-{text:"Black",type:"megumi"},
-{text:"Pink",type:"nobara"},
-{text:"Dark red",type:"sukuna"},
-{text:"White",type:"yuta"},
-{text:"Green",type:"toji"}]},
-
+{q:"Your energy today? ✨",a:[
+{text:"I shine without trying 😎",type:"gojo"},
+{text:"I just want everyone safe 💪",type:"yuji"},
+{text:"Quiet but focused 🐺",type:"megumi"},
+{text:"Confident and stylish 💅",type:"nobara"},
+{text:"Dark and unstoppable 😈",type:"sukuna"},
+{text:"Soft but powerful 🖤",type:"yuta"},
+{text:"Cold and independent 🗡️",type:"toji"}]},
+{q:"Your ideal power? 🔮",a:[
+{text:"Limitless dominance 🌌",type:"gojo"},
+{text:"Raw physical strength 👊",type:"yuji"},
+{text:"Summoning shadows 🐺",type:"megumi"},
+{text:"Precise cursed technique 🔨",type:"nobara"},
+{text:"Absolute destruction 🔥",type:"sukuna"},
+{text:"Boundless cursed energy 💫",type:"yuta"},
+{text:"Perfect weapon mastery ⚔️",type:"toji"}]},
+{q:"Your vibe in battle? ⚔️",a:[
+{text:"Untouchable and smiling 😏",type:"gojo"},
+{text:"Fearless and loyal 🤝",type:"yuji"},
+{text:"Strategic and calm 🧠",type:"megumi"},
+{text:"Sharp and fearless 💥",type:"nobara"},
+{text:"Brutal and dominant 👑",type:"sukuna"},
+{text:"Protective and focused 🛡️",type:"yuta"},
+{text:"Fast and lethal ⚡",type:"toji"}]},
+{q:"Your personality? 💭",a:[
+{text:"Playful genius 🌀",type:"gojo"},
+{text:"Kind-hearted hero ❤️",type:"yuji"},
+{text:"Serious thinker 📖",type:"megumi"},
+{text:"Bold queen 👠",type:"nobara"},
+{text:"Proud king 👑",type:"sukuna"},
+{text:"Gentle soul 🌙",type:"yuta"},
+{text:"Lone wolf 🐺",type:"toji"}]},
+{q:"Your role in a team? 🤝",a:[
+{text:"Leader everyone trusts 🧿",type:"gojo"},
+{text:"The heart of the group 💛",type:"yuji"},
+{text:"The brain behind plans 🧠",type:"megumi"},
+{text:"The motivator 🔥",type:"nobara"},
+{text:"The boss 😈",type:"sukuna"},
+{text:"The protector 🛡️",type:"yuta"},
+{text:"Works alone 🚶",type:"toji"}]},
+{q:"Pick a color 🎨",a:[
+{text:"Infinity blue 🔵",type:"gojo"},
+{text:"Passion red 🔴",type:"yuji"},
+{text:"Shadow black ⚫",type:"megumi"},
+{text:"Rose pink 🌸",type:"nobara"},
+{text:"Crimson 🔥",type:"sukuna"},
+{text:"Pure white 🤍",type:"yuta"},
+{text:"Dark green 🟢",type:"toji"}]},
+{q:"Your biggest strength? 💪",a:[
+{text:"Natural talent 🌟",type:"gojo"},
+{text:"Endless determination 🔥",type:"yuji"},
+{text:"Sharp mind 🧠",type:"megumi"},
+{text:"Unbreakable confidence 💅",type:"nobara"},
+{text:"Overwhelming power 😈",type:"sukuna"},
+{text:"Loyal heart 🖤",type:"yuta"},
+{text:"Perfect instincts 🐾",type:"toji"}]},
 {q:"Your weakness? 😅",a:[
-{text:"Too strong",type:"gojo"},
-{text:"Too kind",type:"yuji"},
-{text:"Overthinking",type:"megumi"},
-{text:"Stubborn",type:"nobara"},
-{text:"Ego",type:"sukuna"},
-{text:"Self doubt",type:"yuta"},
-{text:"Trust issues",type:"toji"}]},
-
-{q:"Your weapon? ⚔️",a:[
-{text:"Infinity",type:"gojo"},
-{text:"Fists",type:"yuji"},
-{text:"Shikigami",type:"megumi"},
-{text:"Hammer",type:"nobara"},
-{text:"Cleave",type:"sukuna"},
-{text:"Katana",type:"yuta"},
-{text:"Spear",type:"toji"}]},
-
+{text:"Being too strong 😎",type:"gojo"},
+{text:"Caring too much ❤️",type:"yuji"},
+{text:"Overthinking 🤯",type:"megumi"},
+{text:"Being stubborn 😤",type:"nobara"},
+{text:"Ego 😈",type:"sukuna"},
+{text:"Self doubt 🥀",type:"yuta"},
+{text:"Trust issues 🗡️",type:"toji"}]},
 {q:"Pick food 🍜",a:[
-{text:"Anything expensive",type:"gojo"},
-{text:"Fast food",type:"yuji"},
-{text:"Simple meal",type:"megumi"},
-{text:"Desserts",type:"nobara"},
-{text:"Blood (jk)",type:"sukuna"},
-{text:"Homemade",type:"yuta"},
-{text:"Protein",type:"toji"}]},
-
+{text:"Luxury sweets 🍰",type:"gojo"},
+{text:"Fast food 🍔",type:"yuji"},
+{text:"Simple meal 🍚",type:"megumi"},
+{text:"Trendy desserts 🧁",type:"nobara"},
+{text:"Something spicy 🌶️",type:"sukuna"},
+{text:"Homemade food 🍲",type:"yuta"},
+{text:"Protein meal 🍗",type:"toji"}]},
 {q:"Your hobby? 🎮",a:[
-{text:"Flexing",type:"gojo"},
-{text:"Sports",type:"yuji"},
-{text:"Training",type:"megumi"},
-{text:"Shopping",type:"nobara"},
-{text:"Destroying",type:"sukuna"},
-{text:"Reading",type:"yuta"},
-{text:"Working out",type:"toji"}]},
-
-// ещё 10 вопросов (короче но прикольно)
-
+{text:"Showing off 😎",type:"gojo"},
+{text:"Training hard 🏋️",type:"yuji"},
+{text:"Studying techniques 📚",type:"megumi"},
+{text:"Shopping 🛍️",type:"nobara"},
+{text:"Chaos 😈",type:"sukuna"},
+{text:"Reading quietly 📖",type:"yuta"},
+{text:"Working alone 🗡️",type:"toji"}]},
 {q:"Night or day? 🌙",a:[
-{text:"Day",type:"gojo"},
-{text:"Day",type:"yuji"},
-{text:"Night",type:"megumi"},
-{text:"Day",type:"nobara"},
-{text:"Night",type:"sukuna"},
-{text:"Night",type:"yuta"},
-{text:"Night",type:"toji"}]},
-
-{q:"Your fear? 👀",a:[
-{text:"Nothing",type:"gojo"},
-{text:"Losing friends",type:"yuji"},
-{text:"Failure",type:"megumi"},
-{text:"Being ignored",type:"nobara"},
-{text:"Boredom",type:"sukuna"},
-{text:"Hurting others",type:"yuta"},
-{text:"Attachment",type:"toji"}]},
-
-{q:"Pick animal 🐺",a:[
-{text:"Dragon",type:"gojo"},
-{text:"Dog",type:"yuji"},
-{text:"Wolf",type:"megumi"},
-{text:"Cat",type:"nobara"},
-{text:"Tiger",type:"sukuna"},
-{text:"Fox",type:"yuta"},
-{text:"Hawk",type:"toji"}]},
-
-{q:"Your vibe in class 📚",a:[
-{text:"Teacher",type:"gojo"},
-{text:"Friendly",type:"yuji"},
-{text:"Quiet",type:"megumi"},
-{text:"Popular",type:"nobara"},
-{text:"Doesn't care",type:"sukuna"},
-{text:"Top student",type:"yuta"},
-{text:"Skipped",type:"toji"}]},
-
-{q:"Your aura ✨",a:[
-{text:"Unlimited",type:"gojo"},
-{text:"Warm",type:"yuji"},
-{text:"Cold",type:"megumi"},
-{text:"Bright",type:"nobara"},
-{text:"Dark",type:"sukuna"},
-{text:"Pure",type:"yuta"},
-{text:"Deadly",type:"toji"}]},
-
-{q:"Pick a quote 🗣️",a:[
-{text:"I'm the strongest",type:"gojo"},
-{text:"I'll save everyone",type:"yuji"},
-{text:"I do what I must",type:"megumi"},
-{text:"I look good",type:"nobara"},
-{text:"Bow to me",type:"sukuna"},
-{text:"I will protect",type:"yuta"},
-{text:"I work alone",type:"toji"}]},
-
+{text:"Bright day ☀️",type:"gojo"},
+{text:"Sunny vibes 🌤️",type:"yuji"},
+{text:"Night silence 🌙",type:"megumi"},
+{text:"Golden sunset 🌇",type:"nobara"},
+{text:"Dark night 🌑",type:"sukuna"},
+{text:"Calm night 🌌",type:"yuta"},
+{text:"Foggy morning 🌫️",type:"toji"}]},
+{q:"Your aura? ✨",a:[
+{text:"Unlimited 🌌",type:"gojo"},
+{text:"Warm 🔥",type:"yuji"},
+{text:"Cold ❄️",type:"megumi"},
+{text:"Bright 💖",type:"nobara"},
+{text:"Demonic 😈",type:"sukuna"},
+{text:"Pure 🌙",type:"yuta"},
+{text:"Deadly ⚔️",type:"toji"}]},
+{q:"Pick an animal 🐾",a:[
+{text:"Dragon 🐉",type:"gojo"},
+{text:"Dog 🐶",type:"yuji"},
+{text:"Wolf 🐺",type:"megumi"},
+{text:"Cat 🐱",type:"nobara"},
+{text:"Tiger 🐯",type:"sukuna"},
+{text:"Fox 🦊",type:"yuta"},
+{text:"Hawk 🦅",type:"toji"}]},
 {q:"Your speed? ⚡",a:[
-{text:"Teleport",type:"gojo"},
-{text:"Fast",type:"yuji"},
-{text:"Medium",type:"megumi"},
-{text:"Stylish fast",type:"nobara"},
-{text:"Demonic fast",type:"sukuna"},
-{text:"Swift",type:"yuta"},
-{text:"Blitz",type:"toji"}]},
-
-{q:"Your goal 🎯",a:[
-{text:"Have fun",type:"gojo"},
-{text:"Help people",type:"yuji"},
-{text:"Get stronger",type:"megumi"},
-{text:"Live stylish",type:"nobara"},
-{text:"Rule",type:"sukuna"},
-{text:"Protect loved ones",type:"yuta"},
-{text:"Survive",type:"toji"}]},
-
+{text:"Teleport fast 🌀",type:"gojo"},
+{text:"Quick 💨",type:"yuji"},
+{text:"Balanced 🧘",type:"megumi"},
+{text:"Elegant 💃",type:"nobara"},
+{text:"Demonic fast 😈",type:"sukuna"},
+{text:"Swift 🌙",type:"yuta"},
+{text:"Blitz 🗡️",type:"toji"}]},
+{q:"Your goal? 🎯",a:[
+{text:"Have fun 😎",type:"gojo"},
+{text:"Save everyone ❤️",type:"yuji"},
+{text:"Get stronger 💪",type:"megumi"},
+{text:"Live beautifully 💅",type:"nobara"},
+{text:"Rule the world 👑",type:"sukuna"},
+{text:"Protect loved ones 🛡️",type:"yuta"},
+{text:"Survive alone 🚶",type:"toji"}]},
+{q:"Your fear? 👀",a:[
+{text:"Nothing 😎",type:"gojo"},
+{text:"Losing friends 💔",type:"yuji"},
+{text:"Failure 😓",type:"megumi"},
+{text:"Being ignored 😤",type:"nobara"},
+{text:"Boredom 😈",type:"sukuna"},
+{text:"Hurting others 🥀",type:"yuta"},
+{text:"Attachment 🗡️",type:"toji"}]},
+{q:"Your vibe in class? 📚",a:[
+{text:"Teacher energy 😎",type:"gojo"},
+{text:"Friendly student 😊",type:"yuji"},
+{text:"Quiet genius 🤫",type:"megumi"},
+{text:"Popular icon 💅",type:"nobara"},
+{text:"Doesn't care 😈",type:"sukuna"},
+{text:"Top student 🏆",type:"yuta"},
+{text:"Skipped class 🗡️",type:"toji"}]},
 {q:"Pick weather 🌧️",a:[
-{text:"Sunny",type:"gojo"},
-{text:"Warm",type:"yuji"},
-{text:"Rainy",type:"megumi"},
-{text:"Spring",type:"nobara"},
-{text:"Storm",type:"sukuna"},
-{text:"Snow",type:"yuta"},
-{text:"Windy",type:"toji"}]},
-
-{q:"Final question: your destiny 🔮",a:[
-{text:"Legend",type:"gojo"},
-{text:"Hero",type:"yuji"},
-{text:"Sorcerer",type:"megumi"},
-{text:"Queen",type:"nobara"},
-{text:"King of curses",type:"sukuna"},
-{text:"Guardian",type:"yuta"},
-{text:"Ghost",type:"toji"}]}
+{text:"Sunny ☀️",type:"gojo"},
+{text:"Warm 🌤️",type:"yuji"},
+{text:"Rainy 🌧️",type:"megumi"},
+{text:"Spring 🌸",type:"nobara"},
+{text:"Storm ⛈️",type:"sukuna"},
+{text:"Snow ❄️",type:"yuta"},
+{text:"Wind 🌪️",type:"toji"}]},
+{q:"Your destiny? 🔮",a:[
+{text:"Legend 🌟",type:"gojo"},
+{text:"Hero 🦸",type:"yuji"},
+{text:"Sorcerer 🧿",type:"megumi"},
+{text:"Queen 👑",type:"nobara"},
+{text:"King of curses 😈",type:"sukuna"},
+{text:"Guardian 🛡️",type:"yuta"},
+{text:"Ghost 🗡️",type:"toji"}]},
+{q:"Final vibe? 💫",a:[
+{text:"The strongest 😎",type:"gojo"},
+{text:"The bravest 💪",type:"yuji"},
+{text:"The smartest 🧠",type:"megumi"},
+{text:"The boldest 💅",type:"nobara"},
+{text:"The darkest 😈",type:"sukuna"},
+{text:"The kindest 🖤",type:"yuta"},
+{text:"The deadliest ⚔️",type:"toji"}]}
 ];
 
 let current=0;
+let scores={gojo:0,yuji:0,megumi:0,nobara:0,sukuna:0,yuta:0,toji:0};
+
+const questionDiv=document.getElementById('question');
+const answersDiv=document.getElementById('answers');
+const resultDiv=document.getElementById('result');
+const resultName=document.getElementById('resultName');
+const resultImg=document.getElementById('resultImg');
 
 function showQuestion(){
-const q=questions[current];
-document.getElementById("question").innerHTML="<h2>"+q.q+"</h2>";
-const answersDiv=document.getElementById("answers");
-answersDiv.innerHTML="";
-q.a.forEach(ans=>{
-const btn=document.createElement("button");
-btn.textContent=ans.text;
-btn.onclick=()=>{
-scores[ans.type]++;
-current++;
-if(current<questions.length){showQuestion();}
-else{showResult();}
-};
-answersDiv.appendChild(btn);
-});
+  if(current>=questions.length){
+    showResult();
+    return;
+  }
+  questionDiv.innerText=questions[current].q;
+  answersDiv.innerHTML='';
+  questions[current].a.forEach(ans=>{
+    const btn=document.createElement('div');
+    btn.className='answer';
+    btn.innerText=ans.text;
+    btn.onclick=()=>{scores[ans.type]++; current++; showQuestion();}
+    answersDiv.appendChild(btn);
+  });
 }
 
 function showResult(){
-document.getElementById("quiz").style.display="none";
-
-let winner=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-
-document.getElementById("result").style.display="block";
-document.getElementById("result").innerHTML=`
-<h1>You are ${characters[winner].name} 🎉</h1>
-<img src="${characters[winner].img}">
-<br><br>
-<button onclick="location.reload()">Try again 🔄</button>
-`;
-
-confettiRain();
+  const winner=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+  resultName.innerText=`You are ${questions[0].a.find(x=>x.type===winner).text.split(' ')[0]}!`;
+  resultImg.src=`images/${winner}.png`;
+  resultDiv.style.display='block';
+  launchFireworks();
 }
 
-function confettiRain(){
-for(let i=0;i<150;i++){
-let conf=document.createElement("div");
-conf.className="confetti";
-conf.style.left=Math.random()*100+"vw";
-conf.style.animationDuration=(Math.random()*3+2)+"s";
-conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
-document.body.appendChild(conf);
-setTimeout(()=>conf.remove(),5000);
-}
+function launchFireworks(){
+  for(let i=0;i<50;i++){
+    const fire=document.createElement('div');
+    fire.className='firework';
+    fire.style.left=Math.random()*window.innerWidth+'px';
+    fire.style.animationDuration=(1+Math.random()*1)+'s';
+    document.body.appendChild(fire);
+    setTimeout(()=>fire.remove(),2000);
+  }
 }
 
 showQuestion();
-
 </script>
 </body>
 </html>
